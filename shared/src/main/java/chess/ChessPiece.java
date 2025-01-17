@@ -29,13 +29,20 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        if(TeamColor == 'black'){
+            return black;
+        }
+        else{
+            return white;
+        }
+        // throw new RuntimeException("Not implemented");
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
+        if 
         throw new RuntimeException("Not implemented");
     }
 
