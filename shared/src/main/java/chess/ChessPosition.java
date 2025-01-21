@@ -1,5 +1,4 @@
 package chess;
-
 /**
  * Represents a single square position on a chess board
  * <p>
@@ -8,12 +7,12 @@ package chess;
  */
 public class ChessPosition {
 
-    private final int row;
-    private final int col;
+    private int row;
+    private int col;
 
     public ChessPosition(int row, int col) {
-        this.row = row;
         this.col = col;
+        this.row = row;
     }
 
     /**
@@ -21,16 +20,25 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return this.row;
+        return row;
 //        throw new RuntimeException("Not implemented");
     }
-
     /**
      * @return which column this position is in
      * 1 codes for the left row
      */
     public int getColumn() {
-        return this.col;
+        return col;
 //        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
