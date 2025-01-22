@@ -55,25 +55,47 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-//        switch (this.type) {
-//            case KING -> ChessMove.pieceMoves(board,myPosition);
-//        }
+        switch (this.type) {
+            case ROOK -> RookMove(board, myPosition);
+            case KING -> KingMove(board, myPosition);
+            case BISHOP -> BishopMove(board, myPosition);
+            case KNIGHT -> KnightMove(board, myPosition);
+            case QUEEN -> QueenMove(board, myPosition);
+            case PAWN -> PawnMove(board, myPosition);
+        }
 
+    }
+
+    public ChessMove RookMove(ChessBoard board, ChessPosition myPosition) {
         /* FOR ROOK
-        * for(int i = myPosition.row; i<8; i++
-        * for(int i = myPosition.row; i<8; i--
-        * for(int i = myPosition.col; i<8; i--
-        *   if ChessBoard.getPiece = null;
-        *         hashSet(addPosition(row,col+i));
-        *   else {
-        *       if pieceColor != this.pieceColor
-        *           add hashSet(addPsition(row,col+i)
-        *       break;
-        *         }
-        *
-        *
-        * */
-        throw new RuntimeException("Not implemented");
+         * for(int i = myPosition.row; i<8; i++
+         * for(int i = myPosition.row; i<8; i--
+         * for(int i = myPosition.col; i<8; i--
+         *   if ChessBoard.getPiece = null;
+         *         hashSet(addPosition(row,col+i));
+         *   else {
+         *       if pieceColor != this.pieceColor
+         *           add hashSet(addPsition(row,col+i)
+         *       break;
+         *         }
+         *
+         *
+         * */
+    }
+    public ChessMove KingMove(ChessBoard board, ChessPosition position) {
+
+    }
+    public ChessMove BishopMove(ChessBoard board, ChessPosition position) {
+
+    }
+    public ChessMove KnightMove(ChessBoard board, ChessPosition position) {
+
+    }
+    public ChessMove QueenMove(ChessBoard board, ChessPosition position) {
+
+    }
+    public ChessMove PawnMove(ChessBoard board, ChessPosition position) {
+
     }
 
     @Override
