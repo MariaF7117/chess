@@ -58,6 +58,7 @@ public class ChessPiece {
 //        switch (this.type) {
 //            case KING -> ChessMove.pieceMoves(board,myPosition);
 //        }
+
         /* FOR ROOK
         * for(int i = myPosition.row; i<8; i++
         * for(int i = myPosition.row; i<8; i--
