@@ -2,6 +2,8 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a single chess piece
@@ -55,18 +57,31 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        Set<ChessMove> PossibleMoves = new HashSet<>();
         switch (this.type) {
-            case ROOK -> RookMove(board, myPosition);
-            case KING -> KingMove(board, myPosition);
-            case BISHOP -> BishopMove(board, myPosition);
-            case KNIGHT -> KnightMove(board, myPosition);
-            case QUEEN -> QueenMove(board, myPosition);
-            case PAWN -> PawnMove(board, myPosition);
+            case ROOK -> PossibleMoves.addAll(RookMove(board, myPosition));
+            case KING -> PossibleMoves.addAll(KingMove(board, myPosition));
+            case BISHOP -> PossibleMoves.addAll(BishopMove(board, myPosition));
+            case KNIGHT -> PossibleMoves.addAll(KnightMove(board, myPosition));
+            case QUEEN -> PossibleMoves.addAll(QueenMove(board, myPosition));
+            case PAWN -> PossibleMoves.addAll(PawnMove(board, myPosition));
         }
-
+        return PossibleMoves;
     }
 
-    public ChessMove RookMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> RookMove(ChessBoard board, ChessPosition myPosition) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                if(ChessBoard.getPiece() = null){
+                    board[x][y];
+                }
+                else {
+                    if (pieceColor != this.pieceColor)
+                        board[x][y];
+                    break;
+                }
+            }
+        }
         /* FOR ROOK
          * for(int i = myPosition.row; i<8; i++
          * for(int i = myPosition.row; i<8; i--
@@ -82,19 +97,19 @@ public class ChessPiece {
          *
          * */
     }
-    public ChessMove KingMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove> KingMove(ChessBoard board, ChessPosition position) {
 
     }
-    public ChessMove BishopMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  BishopMove(ChessBoard board, ChessPosition position) {
 
     }
-    public ChessMove KnightMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  KnightMove(ChessBoard board, ChessPosition position) {
 
     }
-    public ChessMove QueenMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition position) {
 
     }
-    public ChessMove PawnMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition position) {
 
     }
 
