@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a single chess piece
@@ -201,10 +198,14 @@ public class ChessPiece {
     }
     private Set<ChessMove>  KnightMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
+
         return moves;
     }
     private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
+        moves.addAll(RookMove(board, myPosition));
+        moves.addAll(BishopMove(board, myPosition));
+        BishopMove(board, myPosition);
         return moves;
     }
     private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition myPosition) {
