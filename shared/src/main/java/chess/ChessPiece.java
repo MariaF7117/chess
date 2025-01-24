@@ -198,19 +198,54 @@ public class ChessPiece {
     }
     private Set<ChessMove> KnightMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
-        int [][] array = {
-            {2,1},{2,-1},
-            {1,2},{1,-2},
-            {-1,-2},{-1,2},
-            {-2,1},{-2,-1},
-        };
-/*
-*for(int [] moves: array )
-* use for loop to iterate through tuples
-* add the tuple to the current position not the board
-* ChessPosition
-* research range based for loop in java
-* */
+        if (myPosition.getRow()+2 <= 8 && myPosition.getColumn() +1 <= 8) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()+ 1));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()+1), null));
+            }
+        }
+        if (myPosition.getRow()+2 <= 8 && myPosition.getColumn()-1 > 0) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1), null));
+            }
+        }
+        if (myPosition.getRow()-2 > 0 && myPosition.getColumn()+1 <= 8) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()+1));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()+1), null));
+            }
+        }
+        if (myPosition.getRow()-2 > 0 && myPosition.getColumn()-1 > 0) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()-1));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()-1), null));
+            }
+        }
+        if (myPosition.getRow()+1 <= 8 && myPosition.getColumn()+2 <= 8) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+2));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+2), null));
+            }
+        }
+        if (myPosition.getRow()+1 <= 8 && myPosition.getColumn()-2 > 0) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-2));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-2), null));
+            }
+        }
+        if (myPosition.getRow()-1 > 0 && myPosition.getColumn()+2 <= 8) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+2));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+2), null));
+            }
+        }
+        if (myPosition.getRow()-1 > 0 && myPosition.getColumn()-2 > 0) {
+            ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-2));
+            if (piece == null || piece.getTeamColor() != this.pieceColor) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-2), null));
+            }
+        }
         return moves;
     }
     private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition myPosition) {
@@ -222,6 +257,8 @@ public class ChessPiece {
     }
     private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
+
+        moves.addAll(PawnMove(board, myPosition));
         return moves;
     }
 
