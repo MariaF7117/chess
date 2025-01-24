@@ -196,9 +196,21 @@ public class ChessPiece {
         }
         return moves;
     }
-    private Set<ChessMove>  KnightMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> KnightMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
-
+        int [][] array = {
+            {2,1},{2,-1},
+            {1,2},{1,-2},
+            {-1,-2},{-1,2},
+            {-2,1},{-2,-1},
+        };
+/*
+*for(int [] moves: array )
+* use for loop to iterate through tuples
+* add the tuple to the current position not the board
+* ChessPosition
+* research range based for loop in java
+* */
         return moves;
     }
     private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition myPosition) {
