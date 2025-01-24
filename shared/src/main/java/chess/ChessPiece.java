@@ -119,25 +119,55 @@ public class ChessPiece {
 
        return moves;
     }
-    private Set<ChessMove> KingMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove> KingMove(ChessBoard board, ChessPosition myPosition) {
+        Set<ChessMove> moves = new HashSet<>();
+        for(int r = myPosition.getRow(); r >= 0; r--) {
+            ChessPiece piece = board.getPiece(myPosition);
+            if(piece != null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, myPosition.getColumn()),null));
+            }
+            else{
+                if(getTeamColor() != this.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, myPosition.getColumn()),null));
+                }
+                break;}
+        }
+        for(int c = myPosition.getColumn(); c <= 0; c--) {
+            ChessPiece piece = board.getPiece(myPosition);
+            if(piece != null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(c, myPosition.getColumn()),null));
+            }
+            else{
+                if(getTeamColor() != this.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(c, myPosition.getColumn()),null));
+                }
+                break;}
+        }
+        return moves;
+    }
+    private Set<ChessMove>  BishopMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         return moves;
     }
-    private Set<ChessMove>  BishopMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  KnightMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         return moves;
     }
-    private Set<ChessMove>  KnightMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         return moves;
     }
-    private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition position) {
+    private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         return moves;
     }
-    private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition position) {
-        Set<ChessMove> moves = new HashSet<>();
-        return moves;
+
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                '}';
     }
 
     @Override
