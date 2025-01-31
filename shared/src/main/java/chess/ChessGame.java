@@ -12,9 +12,11 @@ import java.util.*;
 public class ChessGame {
 
     private TeamColor teamTurn;
+    private ChessBoard board;
 
     public ChessGame() {
         this.teamTurn =  TeamColor.WHITE;
+        this.board = new ChessBoard();
 
     }
 
@@ -50,7 +52,11 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return null;
+        }
+        return piece.pieceMoves(board,startPosition);
     }
 
     /**
@@ -60,7 +66,11 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece == null || piece.getTeamColor() != teamTurn) {
+            throw new InvalidMoveException("Invalid move");
+        }
+
     }
 
     /**
