@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -10,9 +11,10 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    private TeamColor teamColor;
+    private TeamColor teamTurn;
 
     public ChessGame() {
+        this.teamTurn =  TeamColor.WHITE;
 
     }
 
@@ -20,7 +22,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return teamColor;
+        return teamTurn;
     }
 
     /**
@@ -29,7 +31,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.teamTurn = team;
     }
 
     /**
