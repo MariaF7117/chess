@@ -252,7 +252,6 @@ public class ChessPiece {
         Set<ChessMove> moves = new HashSet<>();
         moves.addAll(RookMove(board, myPosition));
         moves.addAll(BishopMove(board, myPosition));
-        BishopMove(board, myPosition);
         return moves;
     }
     private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition myPosition) {
@@ -320,8 +319,8 @@ public class ChessPiece {
                 }
             }
         }
-            return moves;
-   }
+        return moves;
+    }
 
     @Override
     public String toString() {
