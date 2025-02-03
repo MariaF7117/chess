@@ -20,7 +20,6 @@ public class ChessGame {
         this.teamTurn =  TeamColor.WHITE;
         this.board = new ChessBoard();
         this.board.resetBoard();
-
     }
 
     /**
@@ -59,8 +58,6 @@ public class ChessGame {
         if (piece == null) {
             return null;
         }
-        Set<ChessMove> moves = new HashSet<>();
-
         return piece.pieceMoves(board,startPosition);
     }
 
@@ -73,16 +70,14 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         if (piece == null || piece.getTeamColor() != teamTurn) {
-            throw new InvalidMoveException("Invalid move");
+            throw new InvalidMoveException("Invalid move, not your turn.");
         }
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
-            throw new InvalidMoveException("Invalid move");
+            throw new InvalidMoveException("Invalid move, not a valid move.");
         }
-
-        board.getPiece(move.getEndPosition());
-
-
+        board.addPiece(move.getStartPosition(), piece);
+        board.addPiece(move.getEndPosition(), null);
         teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
