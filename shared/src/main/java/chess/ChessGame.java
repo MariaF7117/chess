@@ -3,6 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.*;
 
+import static chess.ChessPiece.PieceType.ROOK;
+
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -56,6 +58,8 @@ public class ChessGame {
         if (piece == null) {
             return null;
         }
+        Set<ChessMove> moves = new HashSet<>();
+
         return piece.pieceMoves(board,startPosition);
     }
 
@@ -75,8 +79,10 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move");
         }
 
-        teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        board.getPiece(move.getEndPosition());
 
+
+        teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     /**
@@ -86,6 +92,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+
         return teamTurn == teamColor;
     }
 
@@ -96,11 +103,10 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (isInCheck(teamColor)) {
-            return true;
+        if (!isInCheck(teamColor)) {
+            return false;
         }
-
-        return teamTurn == teamColor;
+        return true;
     }
 
     /**
@@ -111,10 +117,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if(isInCheckmate(teamColor)) {
-            return true;
+        if (isInCheck(teamColor)) {
+            return false;
         }
-        return teamTurn == teamColor;
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    if (!validMoves(position).isEmpty()) {
+                        return false;  // At least one valid move available
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -157,3 +174,13 @@ public class ChessGame {
         return Objects.hash(teamTurn, board);
     }
 }
+
+/*
+Here is where I am putting my think through logic
+Get KING position and all of his possibleMoves.
+then
+get each of the opposite team's pieceType's possibleMoves
+then
+if opposite team's piece's possibleMoves is King current Position = check
+if each of King's possibleMoves is also in check -> checkmate
+ */
