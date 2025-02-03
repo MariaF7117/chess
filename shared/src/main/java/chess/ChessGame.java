@@ -88,6 +88,17 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        //Get KING position
+        ChessPosition kingPosition = new ChessPosition(0, 0);
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if (piece != null && teamTurn == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                    kingPosition = position;
+                }
+            }
+        }
 
         return teamTurn == teamColor;
     }
@@ -113,21 +124,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if (isInCheck(teamColor)) {
-            return false;
-        }
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition position = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(position);
-                if (piece != null && piece.getTeamColor() == teamColor) {
-                    if (!validMoves(position).isEmpty()) {
-                        return false;  // At least one valid move available
-                    }
-                }
-            }
-        }
-        return true;
+       return isInCheckmate(teamColor);
     }
 
     /**
@@ -147,6 +144,7 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return board;
     }
+
 
     @Override
     public String toString() {
