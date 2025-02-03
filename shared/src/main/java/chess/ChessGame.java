@@ -99,6 +99,21 @@ public class ChessGame {
                 }
             }
         }
+        //get each of the opposite team's pieceType's possibleMoves
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if(piece != null && this.teamTurn != teamColor) {
+                    Collection<ChessMove> moves = validMoves(position);
+                    moves.addAll(validMoves(position));
+                    if(moves.equals(kingPosition)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
 
         return teamTurn == teamColor;
     }
