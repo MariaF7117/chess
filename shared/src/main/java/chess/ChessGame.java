@@ -60,19 +60,12 @@ public class ChessGame {
         }
         Collection<ChessMove> validMoves = new HashSet<>();
         Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
-        ChessPiece capturedPiece = board.getPiece.(move.getEndPosition());
-
-        board.addPiece(move.getEndPosition(), piece);
-        board.addPiece(move.getStartPosition(), null);
-
-
-        board.addPiece(move.getStartPosition(), piece);
-        board.addPiece(move.getEndPosition(), capturedPiece);
-
-        if (!isStillInCheck) {
-            validMoves.add(move);
+        for(ChessMove move : possibleMoves) {
+            boolean checkCheck = isInCheck(teamTurn);
+            if (!checkCheck) {
+                validMoves.add(move);
+            }
         }
-
     return validMoves;
          /*
         create new method to copy or create new board.
