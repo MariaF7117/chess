@@ -58,7 +58,22 @@ public class ChessGame {
         if (piece == null) {
             return null;
         }
-        return piece.pieceMoves(board,startPosition);
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new HashSet<>();
+        for (ChessMove move : possibleMoves) {
+            ChessBoard copyBoard  = board;
+            makeMove(move);
+            if (!isInCheck(piece.getTeamColor())) { // Ensure the move does not leave the king in check
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
+         /*
+        create new method to copy or create new board.
+
+        Check if making that move in possible moves puts me in check and then you can add it to valid moves.
+        you can call isInCheck for this function.
+         */
     }
 
     /**
@@ -105,16 +120,15 @@ public class ChessGame {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
                 if(piece != null && this.teamTurn != teamColor) {
-                    Collection<ChessMove> moves = validMoves(position);
-                    moves.addAll(validMoves(position));
-                    if(moves.equals(kingPosition)) {
-                        return true;
+                    Collection<ChessMove> moves = board.getPiece(position).pieceMoves(board,position);//this is getting the possible moves and then loop through and see fi it is
+                    for (ChessMove move : moves) {
+                        if(move.getEndPosition().equals(kingPosition)) {
+                            return true;
+                        }
                     }
                 }
             }
         }
-
-
         return teamTurn == teamColor;
     }
 
@@ -125,10 +139,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (!isInCheck(teamColor)) {
-            return false;
-        }
-        return true;
+       return isInCheck(teamColor);
     }
 
     /**
