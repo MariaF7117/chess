@@ -58,16 +58,22 @@ public class ChessGame {
         if (piece == null) {
             return null;
         }
-        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new HashSet<>();
-        for (ChessMove move : possibleMoves) {
-            ChessBoard copyBoard  = board;
-            makeMove(move);
-            if (!isInCheck(piece.getTeamColor())) { // Ensure the move does not leave the king in check
-                validMoves.add(move);
-            }
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        ChessPiece capturedPiece = board.getPiece.(move.getEndPosition());
+
+        board.addPiece(move.getEndPosition(), piece);
+        board.addPiece(move.getStartPosition(), null);
+
+
+        board.addPiece(move.getStartPosition(), piece);
+        board.addPiece(move.getEndPosition(), capturedPiece);
+
+        if (!isStillInCheck) {
+            validMoves.add(move);
         }
-        return validMoves;
+
+    return validMoves;
          /*
         create new method to copy or create new board.
 
@@ -84,6 +90,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
+
         if (piece == null || piece.getTeamColor() != teamTurn) {
             throw new InvalidMoveException("Invalid move, not your turn.");
         }

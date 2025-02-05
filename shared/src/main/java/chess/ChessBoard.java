@@ -16,6 +16,11 @@ public class ChessBoard {
     public ChessBoard() {
         board = new ChessPiece[8][8];
     }
+    public ChessBoard(ChessBoard originalBoard){
+        for (int i = 0; i < 8; i++) {
+            System.arraycopy(originalBoard.board[i], 0, board[i], 0, 8);
+        }
+    }
 
     /**
      * Adds a chess piece to the chessboard
@@ -37,6 +42,16 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
        return board[position.getRow()-1][position.getColumn()-1];
 
+    }
+    public ChessPosition getChessPosition(ChessPiece piece){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == piece) {
+                    return new ChessPosition(i + 1, j + 1);
+                }
+            }
+        }
+        return null;
     }
     /**
      * Sets the board to the default starting board
