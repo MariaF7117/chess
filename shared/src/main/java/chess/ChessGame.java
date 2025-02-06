@@ -3,8 +3,6 @@ package chess;
 import java.util.Collection;
 import java.util.*;
 
-import static chess.ChessPiece.PieceType.ROOK;
-
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -68,21 +66,21 @@ public class ChessGame {
             ChessBoard boardCopy = new ChessBoard(board);
             boardCopy.addPiece(startPosition,null);
             // if PromotionPiece == null then ->board.addPiece(move.getEndPosition(), piece);
-            if(move.getPromotionPiece() == null){
-                board.addPiece(move.getEndPosition(), piece);
+            ChessPiece newPiece = piece;
+
+            if(move.getPromotionPiece() != null){
+                //else set piece to PromotionPiece
+                newPiece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
             }
-            //else set piece to PromotionPiece
-            else board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            boardCopy.addPiece(move.getEndPosition(), newPiece);
             //Check if making that move in possible moves puts me in check then you can add it to valid moves.
-            setBoard(boardCopy);
-            if (!isInCheck(teamTurn)) {
+            ChessGame tempGame = new ChessGame();
+            tempGame.setBoard(boardCopy);
+            if (!tempGame.isInCheck(teamTurn)) {
                 // Call isInCheck for this function.
                 validMoves.add(move);
             }
-            setBoard(originalBoard);
-        }
-        if(validMoves.isEmpty()) {
-            return null;
+           // setBoard(originalBoard);
         }
         return validMoves;
     }
@@ -110,7 +108,8 @@ public class ChessGame {
         }
         //else set piece to PromotionPiece
         else {
-            board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            piece.setPieceType(move.getPromotionPiece());
+            board.addPiece(move.getEndPosition(), piece);
         }
         teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
@@ -130,6 +129,7 @@ public class ChessGame {
                 ChessPiece piece = board.getPiece(position);
                 if (piece != null && piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
                     kingPosition = position;
+                    break;
                 }
             }
         }
@@ -183,12 +183,16 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
-                if(piece.getTeamColor()==teamColor && validMoves(position)!=null){
-                        return false;
+
+                if (piece != null && piece.getTeamColor() == teamColor){
+                    Collection<ChessMove> moves = validMoves(position);
+                    if (moves != null && !moves.isEmpty()) {
+                        return true;
                     }
+                }
             }
         }
-        return true;
+        return false;
     }
 
     /**

@@ -11,10 +11,14 @@ import java.util.*;
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private final PieceType type;
+    private PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
+        this.type = type;
+    }
+
+    public void setPieceType(ChessPiece.PieceType type) {
         this.type = type;
     }
 
