@@ -11,16 +11,16 @@ import java.util.*;
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private PieceType type;
+    private final PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
 
-    public void setPieceType(ChessPiece.PieceType type) {
-        this.type = type;
-    }
+//    public void setPieceType(ChessPiece.PieceType type) {
+//        this.type = type;
+//    }
 
     /**
      * The various different chess piece options
@@ -296,7 +296,7 @@ public class ChessPiece {
             ChessPiece piece = board.getPiece(new ChessPosition(move3Row, move3Col));
             if (piece != null && piece.getTeamColor() != this.pieceColor) {
                 if ((this.pieceColor == ChessGame.TeamColor.WHITE && move3Row == 7) ||
-                        (this.pieceColor == ChessGame.TeamColor.BLACK && move3Row == 0)) {
+                        (this.pieceColor == ChessGame.TeamColor.BLACK && move3Row == 1)) {
                     moves.add(new ChessMove(myPosition, new ChessPosition(move3Row, move3Col), type.QUEEN));
                     moves.add(new ChessMove(myPosition, new ChessPosition(move3Row, move3Col), type.ROOK));
                     moves.add(new ChessMove(myPosition, new ChessPosition(move3Row, move3Col), type.BISHOP));
