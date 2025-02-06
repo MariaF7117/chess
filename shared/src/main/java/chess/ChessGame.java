@@ -66,17 +66,18 @@ public class ChessGame {
             ChessBoard boardCopy = new ChessBoard(board);
             boardCopy.addPiece(startPosition,null);
             // if PromotionPiece == null then ->board.addPiece(move.getEndPosition(), piece);
-            ChessPiece newPiece = piece;
+            ChessPiece newPiece;
 
             if(move.getPromotionPiece() != null){
                 //else set piece to PromotionPiece
                 newPiece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
             }
+            else newPiece = piece;
             boardCopy.addPiece(move.getEndPosition(), newPiece);
             //Check if making that move in possible moves puts me in check then you can add it to valid moves.
             ChessGame tempGame = new ChessGame();
             tempGame.setBoard(boardCopy);
-            if (!tempGame.isInCheck(teamTurn)) {
+            if (!tempGame.isInCheck(piece.getTeamColor())) {
                 // Call isInCheck for this function.
                 validMoves.add(move);
             }
@@ -101,16 +102,20 @@ public class ChessGame {
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("Invalid move, not a valid move.");
         }
-        board.addPiece(move.getStartPosition(), null);
+        ChessBoard boardCopy = new ChessBoard(board);
+        boardCopy.addPiece(move.getStartPosition(), null);
         // if PromotionPiece == null then ->board.addPiece(move.getEndPosition(), piece);
-        if(move.getPromotionPiece() == null){
-            board.addPiece(move.getEndPosition(), piece);
+        ChessPiece newPiece;
+        if(move.getPromotionPiece() != null){
+            //else set piece to PromotionPiece
+            newPiece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
         }
-        //else set piece to PromotionPiece
-        else {
-            piece.setPieceType(move.getPromotionPiece());
-            board.addPiece(move.getEndPosition(), piece);
-        }
+        else newPiece = piece;
+        boardCopy.addPiece(move.getEndPosition(), newPiece);
+
+        board.addPiece(move.getStartPosition(), null);
+        board.addPiece(move.getEndPosition(), newPiece);
+
         teamTurn = (teamTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
@@ -122,7 +127,7 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         //Get KING position
-        ChessPosition kingPosition = new ChessPosition(0, 0);
+        ChessPosition kingPosition = null;
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
@@ -133,6 +138,7 @@ public class ChessGame {
                 }
             }
         }
+
         //get each of the opposite team's pieceType's possibleMoves
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
