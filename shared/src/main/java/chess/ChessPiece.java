@@ -18,10 +18,6 @@ public class ChessPiece {
         this.type = type;
     }
 
-//    public void setPieceType(ChessPiece.PieceType type) {
-//        this.type = type;
-//    }
-
     /**
      * The various different chess piece options
      */
