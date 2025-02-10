@@ -60,17 +60,17 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> PossibleMoves = new HashSet<>();
         switch (this.type) {
-            case ROOK -> PossibleMoves.addAll(RookMove(board, myPosition));
-            case KING -> PossibleMoves.addAll(KingMove(board, myPosition));
-            case BISHOP -> PossibleMoves.addAll(BishopMove(board, myPosition));
-            case KNIGHT -> PossibleMoves.addAll(KnightMove(board, myPosition));
-            case QUEEN -> PossibleMoves.addAll(QueenMove(board, myPosition));
-            case PAWN -> PossibleMoves.addAll(PawnMove(board, myPosition));
+            case ROOK -> PossibleMoves.addAll(rookMove(board, myPosition));
+            case KING -> PossibleMoves.addAll(kingMove(board, myPosition));
+            case BISHOP -> PossibleMoves.addAll(bishopMove(board, myPosition));
+            case KNIGHT -> PossibleMoves.addAll(knightMove(board, myPosition));
+            case QUEEN -> PossibleMoves.addAll(queenMove(board, myPosition));
+            case PAWN -> PossibleMoves.addAll(pawnMove(board, myPosition));
         }
         return PossibleMoves;
     }
 
-    private Set<ChessMove> RookMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> rookMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
 
         for(int r = myPosition.getRow()+1; r <= 8; r++) {
@@ -112,7 +112,7 @@ public class ChessPiece {
 
        return moves;
     }
-    private Set<ChessMove> KingMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> kingMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         if (myPosition.getRow() < 7) {
             ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn()));
@@ -164,7 +164,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    private Set<ChessMove>  BishopMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> bishopMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         for (int r = myPosition.getRow() + 1, c = myPosition.getColumn() + 1; r <= 8 && c <= 8; r++, c++){
             ChessPiece piece = board.getPiece(new ChessPosition(r, c));
@@ -200,7 +200,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    private Set<ChessMove> KnightMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> knightMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         if (myPosition.getRow()+2 <= 8 && myPosition.getColumn() +1 <= 8) {
             ChessPiece piece = board.getPiece(new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()+ 1));
@@ -252,13 +252,13 @@ public class ChessPiece {
         }
         return moves;
     }
-    private Set<ChessMove>  QueenMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> queenMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
-        moves.addAll(RookMove(board, myPosition));
-        moves.addAll(BishopMove(board, myPosition));
+        moves.addAll(rookMove(board, myPosition));
+        moves.addAll(bishopMove(board, myPosition));
         return moves;
     }
-    private Set<ChessMove>  PawnMove(ChessBoard board, ChessPosition myPosition) {
+    private Set<ChessMove> pawnMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
         int direction = (this.pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
 
