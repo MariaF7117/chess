@@ -58,16 +58,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Set<ChessMove> PossibleMoves = new HashSet<>();
+        Set<ChessMove> possibleMoves = new HashSet<>();
         switch (this.type) {
-            case ROOK -> PossibleMoves.addAll(rookMove(board, myPosition));
-            case KING -> PossibleMoves.addAll(kingMove(board, myPosition));
-            case BISHOP -> PossibleMoves.addAll(bishopMove(board, myPosition));
-            case KNIGHT -> PossibleMoves.addAll(knightMove(board, myPosition));
-            case QUEEN -> PossibleMoves.addAll(queenMove(board, myPosition));
-            case PAWN -> PossibleMoves.addAll(pawnMove(board, myPosition));
+            case ROOK -> possibleMoves.addAll(rookMove(board, myPosition));
+            case KING -> possibleMoves.addAll(kingMove(board, myPosition));
+            case BISHOP -> possibleMoves.addAll(bishopMove(board, myPosition));
+            case KNIGHT -> possibleMoves.addAll(knightMove(board, myPosition));
+            case QUEEN -> possibleMoves.addAll(queenMove(board, myPosition));
+            case PAWN -> possibleMoves.addAll(pawnMove(board, myPosition));
         }
-        return PossibleMoves;
+        return possibleMoves;
     }
 
     private Set<ChessMove> rookMove(ChessBoard board, ChessPosition myPosition) {
