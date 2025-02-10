@@ -72,7 +72,7 @@ public class ChessGame {
                 //else set piece to PromotionPiece
                 newPiece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
             }
-            else newPiece = piece;
+            else {newPiece = piece;}
             boardCopy.addPiece(move.getEndPosition(), newPiece);
             //Check if making that move in possible moves puts me in check then you can add it to valid moves.
             ChessGame tempGame = new ChessGame();
@@ -110,7 +110,7 @@ public class ChessGame {
             //else set piece to PromotionPiece
             newPiece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
         }
-        else newPiece = piece;
+        else {newPiece = piece;}
         boardCopy.addPiece(move.getEndPosition(), newPiece);
 
         board.addPiece(move.getStartPosition(), null);
@@ -147,17 +147,24 @@ public class ChessGame {
                 ChessPiece piece = board.getPiece(position);
                 if(piece != null && piece.getTeamColor() != teamColor) {
                     //this is getting the possible moves and then loop through and see fi it is
-                    Collection<ChessMove> moves = piece.pieceMoves(board,position);
-                    for (ChessMove move : moves) {
-                        if(move.getEndPosition().equals(kingPosition)) {
-                            return true;
-                        }
+                    if(isAttakingKing(position,kingPosition,board,piece)){
+                        return true;
                     }
                 }
             }
         }
         return false;
     }
+    boolean isAttakingKing (ChessPosition position, ChessPosition kingPosition, ChessBoard board, ChessPiece piece){
+        Collection<ChessMove> moves = piece.pieceMoves(board,position);
+        for (ChessMove move : moves) {
+            if(move.getEndPosition().equals(kingPosition)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Determines if the given team is in checkmate
