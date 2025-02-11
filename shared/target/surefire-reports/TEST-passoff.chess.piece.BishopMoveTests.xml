@@ -40,7 +40,7 @@
     <property name="os.version" value="15.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit server.Server VM"/>
     <property name="maven.ext.class.path" value="/Users/mariafeist/.vscode/extensions/oracle.oracle-java-23.0.1/nbcode/java/maven-nblib/netbeans-eventspy.jar"/>
     <property name="localRepository" value="/Users/mariafeist/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
