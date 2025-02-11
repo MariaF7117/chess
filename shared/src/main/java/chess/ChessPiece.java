@@ -146,38 +146,16 @@ public class ChessPiece {
     }
     private Set<ChessMove> bishopMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
-        for (int r = myPosition.getRow() + 1, c = myPosition.getColumn() + 1; r <= 8 && c <= 8; r++, c++){
-            ChessPiece piece = board.getPiece(new ChessPosition(r, c));
-            if (piece != null) {
-                if(piece.getTeamColor() != this.pieceColor) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            }break;}
-            moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-        }
-        for (int r = myPosition.getRow()+1, c =myPosition.getColumn()-1; r <= 8 && c > 0; r++, c--){
-            ChessPiece piece = board.getPiece(new ChessPosition(r, c));
-            if (piece != null){
-                if(piece.getTeamColor() != this.pieceColor){
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            }break;}
-            moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-        }
-        for(int r = myPosition.getRow() - 1, c =myPosition.getColumn()+1; r > 0 && c <= 8; r--, c++){
-            ChessPiece piece = board.getPiece(new ChessPosition(r, c));
-            if (piece != null) {
-                if(piece.getTeamColor() != this.pieceColor){
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            }break;}
-            moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-        }
-        for(int r = myPosition.getRow()-1, c =myPosition.getColumn()-1; r > 0 && c > 0; r--, c--){
-            ChessPiece piece = board.getPiece(new ChessPosition(r, c));
-            if (piece != null){
-                if(piece.getTeamColor() != this.pieceColor){
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            }break;}
-            moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-        }
+
+        addMovesForDirection(moves,1,0, myPosition,board);
+        addMovesForDirection(moves,0,1,myPosition,board);
+        addMovesForDirection(moves,-1,0,myPosition,board);
+        addMovesForDirection(moves,0,-1,myPosition,board);
+
+        addMovesForDirection(moves,1,1, myPosition,board);
+        addMovesForDirection(moves,1,-1,myPosition,board);
+        addMovesForDirection(moves,-1,1,myPosition,board);
+        addMovesForDirection(moves,-1,-1,myPosition,board);
         return moves;
     }
     private Set<ChessMove> knightMove(ChessBoard board, ChessPosition myPosition) {
