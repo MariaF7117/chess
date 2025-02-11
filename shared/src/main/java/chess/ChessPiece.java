@@ -70,10 +70,12 @@ public class ChessPiece {
         int r = myPosition.getRow() + row;
         int c = myPosition.getColumn() + col;
 
-        while (r >= 1 && r <= 8 && c >= 1 && c <= 8){
+        while (r > 0 && r <= 8 && c >0 && c <= 8){
             ChessPiece piece = board.getPiece(new ChessPosition(r, c));
-            if(piece != null && piece.getTeamColor() != this.pieceColor){
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            if(piece != null) {
+                if(piece.getTeamColor() != this.pieceColor) {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+                }
                 break;
             }
             moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
@@ -146,13 +148,7 @@ public class ChessPiece {
     }
     private Set<ChessMove> bishopMove(ChessBoard board, ChessPosition myPosition) {
         Set<ChessMove> moves = new HashSet<>();
-
-        addMovesForDirection(moves,1,0, myPosition,board);
-        addMovesForDirection(moves,0,1,myPosition,board);
-        addMovesForDirection(moves,-1,0,myPosition,board);
-        addMovesForDirection(moves,0,-1,myPosition,board);
-
-        addMovesForDirection(moves,1,1, myPosition,board);
+        addMovesForDirection(moves,1,1,myPosition,board);
         addMovesForDirection(moves,1,-1,myPosition,board);
         addMovesForDirection(moves,-1,1,myPosition,board);
         addMovesForDirection(moves,-1,-1,myPosition,board);
