@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import model.AuthData;
 import model.GameData;
 
 import java.util.*;
@@ -37,6 +38,12 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void updateGame(GameData game) throws DataAccessException {
         games.put(game.getGameId(), game);
+    }
+
+    @Override
+    public void deleteGame(int gameID) throws DataAccessException {
+        GameData game = getGame(gameID);
+        games.remove(game);
     }
 
     @Override
