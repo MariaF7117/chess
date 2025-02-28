@@ -12,7 +12,7 @@ public class GameData {
     private final String gameName;
     private final ChessGame game;
 
-    GameData(int gameId, String whiteUsername, String blackUsername, String gameName) {
+   public GameData(int gameId, String whiteUsername, String blackUsername, String gameName) {
         this.gameId = gameId;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;

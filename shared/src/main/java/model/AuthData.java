@@ -1,12 +1,13 @@
 package model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class AuthData {
     private final String authToken;
     private final String username;
 
-    AuthData(String authToken, String username) {
+    public AuthData(String authToken, String username) {
         this.authToken = authToken;
         this.username = username;
     }
@@ -15,6 +16,13 @@ public class AuthData {
     }
     public String getUsername() {
         return username;
+    }
+    public String authToken(){
+        return authToken;
+    }
+
+    public static String generateToken() {
+        return UUID.randomUUID().toString();
     }
 
     @Override

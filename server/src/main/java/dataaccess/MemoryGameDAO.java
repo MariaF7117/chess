@@ -18,7 +18,7 @@ public class MemoryGameDAO implements GameDAO {
         //again why the error on GameData???
 
         int newGameId = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
-        GameData newGame = new GameData(newGameId, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName(), new ChessGame());
+        GameData newGame = new GameData(newGameId, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName());
         games.put(newGameId, newGame);
 
         return newGame;

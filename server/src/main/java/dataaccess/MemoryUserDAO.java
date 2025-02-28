@@ -15,7 +15,7 @@ public class MemoryUserDAO implements UserDAO{
     public UserData createUser(UserData user) throws DataAccessException {
 
         //why is newUser mad at me?
-        UserData newUser = new UserData(newUser.getUsername(), newUser.getPassword(), newUser.getEmail());
+        UserData newUser = new UserData(user.getUsername(), user.getPassword(), user.getEmail());
         users.put(newUser.getUsername(), newUser);
         return newUser;
     }
