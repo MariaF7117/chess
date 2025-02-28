@@ -1,6 +1,4 @@
 package server;
-
-import dataaccess.*;
 import handler.ClearApplicationHandler;
 import handler.LoginHandler;
 import handler.LogoutHandler;
@@ -8,7 +6,6 @@ import handler.RegisterHandler;
 import handler.ListGamesHandler;
 import handler.CreateGameHandler;
 import handler.JoinGameHandler;
-import model.AuthData;
 import spark.*;
 import service.GameService;
 import service.UserService;
@@ -26,8 +23,8 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", (req, res) -> (new ClearApplicationHandler()).clearApplication(res, userService, gameService, authService));
-        Spark.post("/user", (req, res) -> (new RegisterHandler()).registerNewUser(req, res));
-        Spark.post("/session", (req, res) -> (new LoginHandler()).login(req, res));
+        Spark.post("/user", (req, res) -> (new RegisterHandler()).registerNewUser(req, res, userService, authService));
+        Spark.post("/session", (req, res) -> (new LoginHandler()).login(req, res, userService, authService));
         Spark.delete("/session", (req, res) -> (new LogoutHandler()).logout(req, res, authService));
         Spark.get("/game", (req, res) -> (new ListGamesHandler()).listGames(req, res, authService, gameService));
         Spark.post("/game", (req, res) -> (new CreateGameHandler()).createGame(req, res, authService, gameService));
