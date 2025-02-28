@@ -6,7 +6,6 @@ import service.UserService;
 import service.AuthService;
 import com.google.gson.Gson;
 
-
 public class ClearApplicationHandler {
 
     private final Gson serializer = new Gson();
