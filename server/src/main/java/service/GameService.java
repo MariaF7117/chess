@@ -2,12 +2,23 @@ package service;
 
 import dataaccess.GameDAO;
 import dataaccess.DataAccessException;
+import dataaccess.MemoryGameDAO;
 import model.GameData;
 
+import java.util.Collection;
 import java.util.List;
 
 public class GameService {
-    private GameDAO gameDAO;
+    private GameDAO gameDAO = new MemoryGameDAO();
+
+
+    public GameService(GameDAO gameDAO) {
+        this.gameDAO = gameDAO;
+    }
+
+    public GameService() {
+
+    }
 
     public GameData createGame(GameData gameData) throws DataAccessException {
         if (gameData.getGameName() == null || gameData.getGameName().isEmpty()) {
@@ -20,8 +31,8 @@ public class GameService {
     public GameData getGame(int gameId) throws DataAccessException {
         return gameDAO.getGame(gameId);
     }
-    public List<GameData> getAllGames() throws DataAccessException {
-        return (List<GameData>) gameDAO.listGames();
+    public Collection<GameData> getAllGames() throws DataAccessException {
+        return gameDAO.listGames();
     }
 
     public void deleteGame(int gameId) throws DataAccessException {

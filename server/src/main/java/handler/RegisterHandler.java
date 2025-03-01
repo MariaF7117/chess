@@ -21,17 +21,16 @@ public class RegisterHandler {
         try {
             UserData user = userService.createUser(serializer.fromJson(req.body(), UserData.class));
             AuthData newAuth = authService.login(user);
+            userService.isValidUser(user);
             res.status(200);
             return serializer.toJson(newAuth);
         }
-
-        //I don't know why this is an error!
-//        catch (BadRequestException e) {
-//            return errorHandler.handleError(e, res, 400);
-//        }
-//        catch (UserExistsException e) {
-//            return errorHandler.handleError(e, res, 403);
-//        }
+        catch (BadRequestException e) {
+            return errorHandler.handleError(e, res, 400);
+        }
+        catch (UserExistsException e) {
+            return errorHandler.handleError(e, res, 403);
+        }
         catch (Exception e) {
             return errorHandler.handleError(e, res, 500);
         }

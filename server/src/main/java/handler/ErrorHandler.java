@@ -13,8 +13,4 @@ public class ErrorHandler {
         res.status(statusCode);
         return body;
     }
-//    private static class ErrorResponse {
-//        String message;
-//        ErrorResponse(String message) { this.message = message; }
-//    }
 }

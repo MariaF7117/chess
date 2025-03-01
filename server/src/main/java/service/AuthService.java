@@ -1,16 +1,14 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
+import dataaccess.*;
+import handler.errors.UnauthorizedException;
 import model.AuthData;
 import model.UserData;
 
 import java.util.UUID;
 
 public class AuthService {
-    private AuthDAO authDAO;
-    private UserDAO userDAO;
+    private AuthDAO authDAO = new MemoryAuthDAO();
 
     public AuthData createAuth(AuthData authData) throws DataAccessException {
         if (authData.authToken() == null || authData.authToken().isEmpty()) {
@@ -23,17 +21,23 @@ public class AuthService {
         return authDAO.createAuth(user.getUsername());
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getUserByAuthToken(String authToken) throws DataAccessException {
         return authDAO.getAuth(authToken);
     }
 
-    public void deleteAuth(String authToken) throws DataAccessException {
-        authDAO.deleteAuth(authToken);
+    public void deleteAuth(String authToken) throws UnauthorizedException, DataAccessException {
+        AuthData authData = authDAO.getAuthByToken(authToken);
+        if (authData == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        else {
+            authDAO.deleteAuth(authToken);
+        }
     }
 
     public String validate(String authToken) throws Exception {
         AuthData authData = authDAO.getAuth(authToken);
-        if (authData == null) {
+        if (authData == null || !authData.authToken().equals(authToken)) {
             throw new Exception("Error: unauthorized");
         }
         return authToken;
@@ -45,7 +49,6 @@ public class AuthService {
     }
 
     public void clear() throws Exception {
-        userDAO.clear();
         authDAO.clear();
     }
 }
