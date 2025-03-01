@@ -1,7 +1,8 @@
 package handler;
 
 import service.GameService;
-import spark.*;
+import spark.Request;
+import spark.Response;
 import service.UserService;
 import service.AuthService;
 import com.google.gson.Gson;

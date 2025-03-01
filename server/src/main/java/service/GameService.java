@@ -4,6 +4,8 @@ import dataaccess.GameDAO;
 import dataaccess.DataAccessException;
 import model.GameData;
 
+import java.util.List;
+
 public class GameService {
     private GameDAO gameDAO;
 
@@ -17,6 +19,9 @@ public class GameService {
 
     public GameData getGame(int gameId) throws DataAccessException {
         return gameDAO.getGame(gameId);
+    }
+    public List<GameData> getAllGames() throws DataAccessException {
+        return (List<GameData>) gameDAO.listGames();
     }
 
     public void deleteGame(int gameId) throws DataAccessException {

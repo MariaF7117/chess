@@ -5,13 +5,11 @@ import dataaccess.AuthDAO;
 import model.AuthData;
 import model.UserData;
 
-import java.util.UUID;
-
 public class UserService {
     private UserDAO userDAO;
     private AuthDAO authDAO;
 
-    public UserData register(UserData registerUser) throws DataAccessException {
+    public UserData createUser(UserData registerUser) throws DataAccessException {
         if (userDAO.getUser(registerUser.getUsername()) != null) {
             throw new DataAccessException("User already exists");
         }
@@ -24,12 +22,8 @@ public class UserService {
         }
     }
 
-    public AuthData login(AuthData loggedInUser) throws DataAccessException {
-        authDAO.deleteAuth(loggedInUser.authToken());
-        return authDAO.getAuth(loggedInUser.authToken());
-    }
-    public void logout(AuthData loggedOutUser) throws DataAccessException {
-        authDAO.deleteAuth(loggedOutUser.authToken());
+    public void logout(AuthData logOutUser) throws DataAccessException {
+        authDAO.deleteAuth(logOutUser.authToken());
     }
 
     public void clear() throws DataAccessException {

@@ -2,14 +2,19 @@ package handler;
 import com.google.gson.Gson;
 import spark.Response;
 
+import java.util.Map;
+
 public class ErrorHandler {
     private final Gson serializer = new Gson();
-    public String handleError(Exception error, Response res, int statusCode) {
+
+    public Object handleError(Exception e, Response res, int statusCode) {
+        String body = serializer.toJson(Map.of("message", "Error: " + e.getMessage(), "success", false));
+        res.type("application/json");
         res.status(statusCode);
-        return serializer.toJson(new ErrorResponse(error.getMessage()));
+        return body;
     }
-    private static class ErrorResponse {
-        String message;
-        ErrorResponse(String message) { this.message = message; }
-    }
+//    private static class ErrorResponse {
+//        String message;
+//        ErrorResponse(String message) { this.message = message; }
+//    }
 }

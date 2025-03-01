@@ -1,30 +1,39 @@
 package handler;
 
 import com.google.gson.Gson;
+import handler.errors.BadRequestException;
+import handler.errors.UserExistsException;
+import model.UserData;
 import service.AuthService;
 import spark.Request;
 import spark.Response;
 import service.UserService;
 import model.AuthData;
+import handler.errors.*;
 
 public class RegisterHandler {
+
     private final Gson serializer = new Gson();
+    private final ErrorHandler errorHandler = new ErrorHandler();
 
     public Object registerNewUser(Request req, Response res, UserService userService, AuthService authService) {
         res.type("application/json");
         try {
-            UserRequest userRequest = serializer.fromJson(req.body(), UserRequest.class);
-            AuthData authData = userService.register(userRequest.username, userRequest.password, userRequest.email);
+            UserData user = userService.createUser(serializer.fromJson(req.body(), UserData.class));
+            AuthData newAuth = authService.login(user);
             res.status(200);
-            return serializer.toJson(authData);
-        } catch (Exception e) {
-            return new ErrorHandler().handleError(e, res, 400);
+            return serializer.toJson(newAuth);
         }
-    }
 
-    private static class UserRequest {
-        String username;
-        String password;
-        String email;
+        //I don't know why this is an error!
+//        catch (BadRequestException e) {
+//            return errorHandler.handleError(e, res, 400);
+//        }
+//        catch (UserExistsException e) {
+//            return errorHandler.handleError(e, res, 403);
+//        }
+        catch (Exception e) {
+            return errorHandler.handleError(e, res, 500);
+        }
     }
 }
