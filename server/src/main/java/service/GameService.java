@@ -44,7 +44,7 @@ public class GameService {
             throw new BadRequestException("Game not found.");
         }
 
-        System.out.println("Before joining: " + gameToJoin.getWhiteUsername() + " | " + gameToJoin.getBlackUsername());
+       // System.out.println("Before joining: " + gameToJoin.getWhiteUsername() + " | " + gameToJoin.getBlackUsername());
 
         if (joinedColor.equalsIgnoreCase("WHITE")) {
             if (gameToJoin.getWhiteUsername() == null || gameToJoin.getWhiteUsername().isEmpty()) {
@@ -64,7 +64,7 @@ public class GameService {
 
         gameDAO.updateGame(gameToJoin);
         GameData updatedGame = gameDAO.getGame(gameID);
-        System.out.println("After joining: " + updatedGame.getWhiteUsername() + " | " + updatedGame.getBlackUsername());  // ✅ Debugging output
+       // System.out.println("After joining: " + updatedGame.getWhiteUsername() + " | " + updatedGame.getBlackUsername());  // ✅ Debugging output
 
         return updatedGame;
     }

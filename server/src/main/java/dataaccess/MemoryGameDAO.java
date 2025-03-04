@@ -28,7 +28,7 @@ public class MemoryGameDAO implements GameDAO {
             throw new DataAccessException("Game not found");
         }
         System.out.println("Fetching game ID: " + gameID + " | White: " + game.getWhiteUsername() +
-                ", Black: " + game.getBlackUsername()); // ✅ Debugging
+                ", Black: " + game.getBlackUsername());
         return game;
     }
 
