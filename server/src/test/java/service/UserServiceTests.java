@@ -50,7 +50,7 @@ public class UserServiceTests {
         userService.createUser(new UserData("testUser", "password", "email@example.com"));
 
         userService.clear();
-//changed this to UnothorizedException instead of DataAccessException... Hope this doesn't break anything in the future...
+//changed this to Unothorized Exception instead of DataAccessException... Hope this doesn't break anything in the future...
         assertThrows(UnauthorizedException.class, () -> userService.isValidUser(new UserData("testUser", "password", null)));
     }
 }
