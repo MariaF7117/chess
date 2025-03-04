@@ -23,7 +23,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void createGame_Success() throws DataAccessException, BadRequestException {
+    void createGameSuccess() throws DataAccessException, BadRequestException {
         GameData newGame = new GameData(0, null, null, "Chess Battle");
         GameData createdGame = gameService.createGame(newGame);
 
@@ -32,7 +32,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void joinGame_Success() throws DataAccessException, BadRequestException, UserExistsException {
+    void joinGameSuccess() throws DataAccessException, BadRequestException, UserExistsException {
         GameData newGame = new GameData(0, null, null, "Chess Battle");
         GameData createdGame = gameService.createGame(newGame);
 
@@ -42,7 +42,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void getGame_Success() throws DataAccessException, BadRequestException {
+    void getGameSuccess() throws DataAccessException, BadRequestException {
         GameData newGame = new GameData(0, null, null, "Chess Battle");
         GameData createdGame = gameService.createGame(newGame);
 
@@ -53,7 +53,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void getAllGames_Success() throws DataAccessException, BadRequestException {
+    void getAllGamesSuccess() throws DataAccessException, BadRequestException {
         gameService.createGame(new GameData(0, null, null, "Game 1"));
         gameService.createGame(new GameData(0, null, null, "Game 2"));
 
@@ -63,7 +63,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void deleteGame_Success() throws DataAccessException, BadRequestException {
+    void deleteGameSuccess() throws DataAccessException, BadRequestException {
         GameData newGame = new GameData(0, null, null, "Chess Battle");
         GameData createdGame = gameService.createGame(newGame);
 
@@ -73,7 +73,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void clearGames_Success() throws DataAccessException, BadRequestException {
+    void clearGamesSuccess() throws DataAccessException, BadRequestException {
         gameService.createGame(new GameData(0, null, null, "Chess Battle"));
 
         gameService.clear();

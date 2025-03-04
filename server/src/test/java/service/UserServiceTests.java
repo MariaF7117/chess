@@ -21,7 +21,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void createUser_Success() throws DataAccessException, BadRequestException, UserExistsException {
+    void createUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
         UserData user = new UserData("testUser", "password", "email@example.com");
         UserData createdUser = userService.createUser(user);
 
@@ -30,7 +30,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void isValidUser_Success() throws DataAccessException, BadRequestException, UserExistsException {
+    void isValidUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
         UserData user = new UserData("testUser", "password", "email@example.com");
         userService.createUser(user);
 
@@ -38,7 +38,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void isValidPassword_Success() throws DataAccessException, BadRequestException, UserExistsException, UnauthorizedException {
+    void isValidPasswordSuccess() throws DataAccessException, BadRequestException, UserExistsException, UnauthorizedException {
         UserData user = new UserData("testUser", "password", "email@example.com");
         userService.createUser(user);
 
@@ -46,7 +46,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void clearUser_Success() throws DataAccessException, BadRequestException, UserExistsException {
+    void clearUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
         userService.createUser(new UserData("testUser", "password", "email@example.com"));
 
         userService.clear();
