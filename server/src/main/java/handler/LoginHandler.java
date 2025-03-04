@@ -18,6 +18,7 @@ public class LoginHandler {
         try {
             UserData user = serializer.fromJson(req.body(), UserData.class);
             userService.isValidPassword(user);
+            //how would I make sure each person had a unique token?
 
             AuthData auth = authService.login(user);
             res.status(200);
@@ -29,10 +30,5 @@ public class LoginHandler {
         catch (Exception e) {
             return new ErrorHandler().handleError(e, res, 500);
         }
-    }
-
-    private static class LoginRequest {
-        String username;
-        String password;
     }
 }

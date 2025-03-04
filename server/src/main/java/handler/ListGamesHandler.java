@@ -2,20 +2,19 @@ package handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import model.GameData;
 import spark.Request;
 import spark.Response;
 import service.AuthService;
 import service.GameService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
 public class ListGamesHandler {
-    private final Gson serializer = new Gson();
-    ErrorHandler errorHandler = new ErrorHandler();
+//    private final Gson serializer = new Gson();
+//    ErrorHandler errorHandler = new ErrorHandler();
 
     public Object listGames(Request req, Response res, AuthService authService, GameService gameService) {
         res.type("application/json");
@@ -24,12 +23,15 @@ public class ListGamesHandler {
             authService.validate(authToken);
 
             Collection<GameData> games = gameService.getAllGames();
-
+            if (games == null) {
+                games = new ArrayList<>();
+            }
             Gson gson = new GsonBuilder().serializeNulls().create();
-            String jsonResponse = gson.toJson(Map.of("games", games));
+            String json = gson.toJson(Map.of("games", games));
+
 
             res.status(200);
-            return jsonResponse;
+            return json;
 
         } catch (Exception e) {
             return new ErrorHandler().handleError(e, res, 401);

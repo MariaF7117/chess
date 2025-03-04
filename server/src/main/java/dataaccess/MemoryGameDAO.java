@@ -1,7 +1,5 @@
 package dataaccess;
 
-import chess.ChessGame;
-import model.AuthData;
 import model.GameData;
 
 import java.util.*;
@@ -16,8 +14,6 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
 
-        //again why the error on GameData???
-
         int newGameId = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
         GameData newGame = new GameData(newGameId, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName());
         games.put(newGameId, newGame);
@@ -27,23 +23,34 @@ public class MemoryGameDAO implements GameDAO {
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return games.get(gameID);
+        GameData game = games.get(gameID);
+        if (game == null) {
+            throw new DataAccessException("Game not found");
+        }
+        System.out.println("Fetching game ID: " + gameID + " | White: " + game.getWhiteUsername() +
+                ", Black: " + game.getBlackUsername()); // ✅ Debugging
+        return game;
     }
 
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
+        if (games == null) {
+            return new ArrayList<>();
+        }
         return games.values();
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-        games.put(game.getGameId(), game);
+        if (!games.containsKey(game.getGameID())) {
+            throw new DataAccessException("Game not found: Cannot update");
+        }
+        games.put(game.getGameID(), game);
     }
 
     @Override
     public void deleteGame(int gameID) throws DataAccessException {
-        GameData game = getGame(gameID);
-        games.remove(game);
+        games.remove(gameID);
     }
 
     @Override

@@ -7,6 +7,9 @@ import handler.errors.*;
 
 public class UserService {
     private UserDAO userDAO = new MemoryUserDAO();
+
+    public UserService() {
+    }
     //private AuthDAO authDAO = new MemoryAuthDAO();
 
     public UserData createUser(UserData registerUser) throws DataAccessException, BadRequestException, UserExistsException {

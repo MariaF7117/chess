@@ -10,6 +10,10 @@ import java.util.UUID;
 public class AuthService {
     private AuthDAO authDAO = new MemoryAuthDAO();
 
+    public AuthService() {
+    }
+
+    //why am I not calling createAuth???
     public AuthData createAuth(AuthData authData) throws DataAccessException {
         if (authData.authToken() == null || authData.authToken().isEmpty()) {
             throw new DataAccessException("Invalid auth token");
@@ -18,11 +22,22 @@ public class AuthService {
         return authDAO.getAuth(authData.authToken());
     }
     public AuthData login(UserData user) throws DataAccessException {
+        AuthData existingAuth = authDAO.getAuthByUsername(user.getUsername());
+        if (existingAuth != null) {
+            authDAO.deleteAuth(existingAuth.authToken());
+        }
         return authDAO.createAuth(user.getUsername());
     }
 
     public AuthData getUserByAuthToken(String authToken) throws DataAccessException {
-        return authDAO.getAuth(authToken);
+        AuthData auth = authDAO.getAuth(authToken);
+        System.out.println("Looking up auth token: " + authToken);
+        if (auth == null) {
+            System.out.println("Auth token not found!");
+        } else {
+            System.out.println("Auth found for user: " + auth.getUsername());
+        }
+        return auth;
     }
 
     public void deleteAuth(String authToken) throws UnauthorizedException, DataAccessException {
@@ -35,10 +50,10 @@ public class AuthService {
         }
     }
 
-    public String validate(String authToken) throws Exception {
+    public String validate(String authToken) throws UnauthorizedException, DataAccessException {
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null || !authData.authToken().equals(authToken)) {
-            throw new Exception("Error: unauthorized");
+            throw new UnauthorizedException("Error: unauthorized");
         }
         return authToken;
     }
