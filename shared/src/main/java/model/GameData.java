@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class GameData {
 
-    private final int gameID;
+    private int gameID;
     private  String whiteUsername;
     private  String blackUsername;
     private final String gameName;
@@ -67,5 +67,9 @@ public class GameData {
                 ", gameName='" + gameName + '\'' +
                 ", game=" + game +
                 '}';
+    }
+
+    public void setGameID(int id) {
+       this.gameID = id;
     }
 }
