@@ -8,9 +8,15 @@ import model.UserData;
 import java.util.UUID;
 
 public class AuthService {
-    private AuthDAO authDAO = new MemoryAuthDAO();
+    private AuthDAO authDAO;
 
     public AuthService() {
+        try{
+            authDAO = new SQLAuthDAO();
+        }
+        catch(Exception e){
+            authDAO = new MemoryAuthDAO();
+        }
     }
 
     //why am I not calling createAuth???

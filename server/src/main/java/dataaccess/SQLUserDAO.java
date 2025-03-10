@@ -17,8 +17,13 @@ public class SQLUserDAO implements UserDAO {
     public UserData createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         var hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        executeUpdate(statement, user.getUsername(), hashedPassword, user.getEmail());
-        return user;
+
+        int rowsAffected = executeUpdate(statement, user.getUsername(), hashedPassword, user.getEmail());
+        if (rowsAffected == 0) {
+            throw new DataAccessException("User creation failed, no rows affected.");
+        }
+
+        return getUser(user.getUsername());
     }
 
     @Override
@@ -41,7 +46,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        var statement = "TRUNCATE users";
+        var statement = "DELETE FROM users";
         executeUpdate(statement);
     }
 

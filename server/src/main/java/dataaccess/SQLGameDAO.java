@@ -89,7 +89,7 @@ public class SQLGameDAO implements GameDAO{
 
     @Override
     public void clear() throws DataAccessException {
-        var statement = "TRUNCATE games";
+        var statement = "DELETE FROM games";
         executeUpdate(statement);
     }
 

@@ -1,8 +1,6 @@
 package service;
 
-import dataaccess.GameDAO;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryGameDAO;
+import dataaccess.*;
 import handler.errors.BadRequestException;
 import handler.errors.UserExistsException;
 import model.GameData;
@@ -14,9 +12,14 @@ import java.util.List;
 
 public class GameService {
 
-    private GameDAO gameDAO = new MemoryGameDAO();
+    private GameDAO gameDAO;
     public GameService() {
-
+        try{
+            gameDAO = new SQLGameDAO();
+        }
+        catch(Exception e){
+            gameDAO = new MemoryGameDAO();
+        }
     }
 
     public GameService(GameDAO gameDAO) {
