@@ -15,6 +15,10 @@ public class LogoutHandler {
         res.type("application/json");
         try {
             String authToken = req.headers("authorization");
+
+            if (authToken == null || authToken.isEmpty()) {
+                throw new UnauthorizedException("No authorization token provided");
+            }
             authService.deleteAuth(authToken);
             res.status(200);
             return serializer.toJson(new Object());

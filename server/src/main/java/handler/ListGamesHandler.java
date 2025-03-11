@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import handler.errors.UnauthorizedException;
 import model.GameData;
 import spark.Request;
 import spark.Response;
@@ -20,6 +21,12 @@ public class ListGamesHandler {
         res.type("application/json");
         try {
             String authToken = req.headers("authorization");
+
+            if (authToken == null || authToken.isEmpty()) {
+                System.out.println("[ERROR] No authorization token provided.");
+                throw new UnauthorizedException("No authorization token provided.");
+            }
+
             authService.validate(authToken);
 
             Collection<GameData> games = gameService.getAllGames();
@@ -33,8 +40,12 @@ public class ListGamesHandler {
             res.status(200);
             return json;
 
-        } catch (Exception e) {
+        }catch (UnauthorizedException e) {
+            System.out.println("[ERROR] Unauthorized: " + e.getMessage());
             return new ErrorHandler().handleError(e, res, 401);
+        }
+        catch (Exception e) {
+            return new ErrorHandler().handleError(e, res, 500);
         }
     }
 }

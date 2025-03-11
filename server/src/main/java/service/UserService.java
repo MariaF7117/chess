@@ -3,6 +3,7 @@ import dataaccess.*;
 import model.UserData;
 import dataaccess.MemoryUserDAO;
 import handler.errors.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 public class UserService {
@@ -42,9 +43,9 @@ public class UserService {
         }
     }
     public void isValidPassword(UserData user) throws UnauthorizedException, DataAccessException {
-        UserData isValidPassword = userDAO.getUser(user.getUsername());
-        if (isValidPassword == null || !user.getPassword().equals(isValidPassword.getPassword())) {
-            throw new UnauthorizedException("unauthorized");
+        UserData storedUser = userDAO.getUser(user.getUsername());
+        if (storedUser == null || !BCrypt.checkpw(user.getPassword(), storedUser.getPassword())) {
+            throw new UnauthorizedException("Unauthorized: Invalid username or password");
         }
     }
 

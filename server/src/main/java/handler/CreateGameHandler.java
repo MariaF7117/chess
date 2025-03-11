@@ -19,7 +19,7 @@ public class CreateGameHandler {
             if (authToken == null || authToken.isEmpty()) {
                 throw new UnauthorizedException("no token");
             }
-            authService.validate(authToken);
+            String username = authService.validate(authToken);
 
             GameData newGame = serializer.fromJson(req.body(), GameData.class);
             GameData createdGame = gameService.createGame(newGame);

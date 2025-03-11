@@ -22,6 +22,7 @@ public class AuthData {
         return authToken;
     }
 
+
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }

@@ -79,12 +79,47 @@ public class SQLGameDAO implements GameDAO{
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        var statement = "UPDATE games SET gameName = ?, game = ? WHERE gameID = ?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, game.getGameName());
+                ps.setString(2, serializeGame(game.getGame()));
+                ps.setInt(3, game.getGameID());
 
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 0) {
+                    throw new DataAccessException("Game update failed, no rows affected.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error updating game: " + e.getMessage());
+        }
+    }
+
+    private String serializeGame(ChessGame game) {
+        try{
+            return game.toString();
+        }
+        catch (Exception e) {
+            return new DataAccessException(String.format("Unable to serialize game: %s", e.getMessage())).toString();
+        }
     }
 
     @Override
     public void deleteGame(int gameID) throws DataAccessException {
+        var statement = "DELETE FROM games WHERE gameID = ?";
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
 
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 0) {
+                    throw new DataAccessException("Game deletion failed, no rows affected.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting game: " + e.getMessage());
+        }
     }
 
     @Override
@@ -101,6 +136,9 @@ public class SQLGameDAO implements GameDAO{
                     var param = params[i];
                     if (param instanceof String p) ps.setString(i + 1, p);
                     else if (param instanceof Integer p) ps.setInt(i + 1, p);
+                    else if (param instanceof Long p) ps.setLong(i + 1, p);
+                    else if (param instanceof Double p) ps.setDouble(i + 1, p);
+                    else if (param instanceof Boolean p) ps.setBoolean(i + 1, p);
                     else if (param == null) ps.setNull(i + 1, NULL);
                 }
                 ps.executeUpdate();

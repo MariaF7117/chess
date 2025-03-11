@@ -19,11 +19,13 @@ public class RegisterHandler {
     public Object registerNewUser(Request req, Response res, UserService userService, AuthService authService) {
         res.type("application/json");
         try {
-            UserData user = userService.createUser(serializer.fromJson(req.body(), UserData.class));
-            AuthData newAuth = authService.login(user);
-            userService.isValidUser(user);
+            UserData newUser = serializer.fromJson(req.body(), UserData.class);
+            UserData createdUser = userService.createUser(newUser);
+            AuthData newAuth = authService.login(createdUser);
+
             res.status(200);
             return serializer.toJson(newAuth);
+
         }
         catch (BadRequestException e) {
             return errorHandler.handleError(e, res, 400);
