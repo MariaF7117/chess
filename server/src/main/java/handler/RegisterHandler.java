@@ -21,7 +21,7 @@ public class RegisterHandler {
         try {
             UserData newUser = serializer.fromJson(req.body(), UserData.class);
             UserData createdUser = userService.createUser(newUser);
-            AuthData newAuth = authService.login(createdUser);
+            AuthData newAuth = authService.loginUser(createdUser);
 
             res.status(200);
             return serializer.toJson(newAuth);

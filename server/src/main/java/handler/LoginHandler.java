@@ -18,7 +18,7 @@ public class LoginHandler {
         try {
             UserData user = serializer.fromJson(req.body(), UserData.class);
             userService.isValidPassword(user);
-            AuthData auth = authService.login(user);
+            AuthData auth = authService.loginUser(user);
             res.status(200);
             return serializer.toJson(auth);
         }
