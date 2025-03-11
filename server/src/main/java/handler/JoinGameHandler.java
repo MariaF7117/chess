@@ -38,6 +38,7 @@ public class JoinGameHandler {
                 return errorHandler.handleError(e, res, 400);
             }
             GameData gameData = gameService.joinGame(gameId, playerColor, username);
+            res.status(200);
             return serializer.toJson(gameData);
         }
         catch (BadRequestException e) {
