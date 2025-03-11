@@ -22,9 +22,6 @@ public class GameService {
         }
     }
 
-    public GameService(GameDAO gameDAO) {
-    }
-
     public GameData createGame(GameData gameData) throws BadRequestException, DataAccessException {
         if (gameData.getGameName() == null || gameData.getGameName().isEmpty()) {
             throw new BadRequestException("Invalid game name");
@@ -47,8 +44,6 @@ public class GameService {
             throw new BadRequestException("Game not found.");
         }
 
-       // System.out.println("Before joining: " + gameToJoin.getWhiteUsername() + " | " + gameToJoin.getBlackUsername());
-
         if (joinedColor.equalsIgnoreCase("WHITE")) {
             if (gameToJoin.getWhiteUsername() == null || gameToJoin.getWhiteUsername().isEmpty()) {
                 gameToJoin.setWhiteUsername(username);
@@ -67,24 +62,12 @@ public class GameService {
 
         gameDAO.updateGame(gameToJoin);
         GameData updatedGame = gameDAO.getGame(gameID);
-       // System.out.println("After joining: " + updatedGame.getWhiteUsername() + " | " + updatedGame.getBlackUsername());  // ✅ Debugging output
 
         return updatedGame;
     }
 
-    public GameData getGame(int gameId) throws DataAccessException {
-        return gameDAO.getGame(gameId);
-    }
     public Collection<GameData> getAllGames() throws DataAccessException {
-        Collection<GameData> games = gameDAO.listGames();
-        if (games == null) {
-            return new ArrayList<>();
-        }
-        return games;
-    }
-
-    public void deleteGame(int gameId) throws DataAccessException {
-        gameDAO.deleteGame(gameId);
+        return gameDAO.listGames();
     }
 
     public void clear() throws DataAccessException {

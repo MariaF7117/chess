@@ -1,5 +1,6 @@
 package server;
 import dataaccess.DataAccessException;
+import dataaccess.GameDAO;
 import handler.ClearApplicationHandler;
 import handler.LoginHandler;
 import handler.LogoutHandler;
@@ -14,6 +15,7 @@ import service.AuthService;
 
 
 public class Server {
+
     public int run(int desiredPort){
         UserService userService = new UserService();
         GameService gameService = new GameService();
