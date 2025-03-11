@@ -41,17 +41,15 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public GameData updateGame(GameData game) throws DataAccessException {
         if (!games.containsKey(game.getGameID())) {
             throw new DataAccessException("Game not found: Cannot update");
         }
         games.put(game.getGameID(), game);
+        return game;
     }
 
-    @Override
-    public void deleteGame(int gameID) throws DataAccessException {
-        games.remove(gameID);
-    }
+
 
     @Override
     public void clear() throws DataAccessException {

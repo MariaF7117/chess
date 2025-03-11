@@ -53,32 +53,44 @@ public class SQLGameDAO implements GameDAO{
 
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
-        var result = new ArrayList<GameData>();
-        try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM pet";
-            try (var ps = conn.prepareStatement(statement)) {
-                try (var rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        result.add(readGame(rs));
-                    }
-                }
+        ArrayList<Integer> gameIDs = getAllGameIDs();
+        ArrayList<GameData> games = new ArrayList<>();
+
+        // Loop through each game ID
+        for (int gameID : gameIDs) {
+            GameData gameData = getGame(gameID);
+            if (gameData != null) {
+                games.add(gameData);
             }
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         }
-        return result;
+
+        return games;
+    }
+    private ArrayList<Integer> getAllGameIDs() throws DataAccessException {
+        String sql = "SELECT gameID FROM games";
+        ArrayList<Integer> gameIDs = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                gameIDs.add(rs.getInt("gameID"));
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Unable to get all games IDs: " + e.getMessage());
+        }
+        return gameIDs;
     }
 
     private GameData readGame(ResultSet rs) throws SQLException {
         var gameID = rs.getInt("gameID");
         var gameName = rs.getString("gameName");
-        var gameStateJson = rs.getString("gameState");
-        var chessGame = gson.fromJson(gameStateJson, ChessGame.class);
         return new GameData(gameID,ChessGame.TeamColor.WHITE.name(), ChessGame.TeamColor.BLACK.name(), gameName);
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public GameData updateGame(GameData game) throws DataAccessException {
         var statement = "UPDATE games SET gameName = ?, game = ? WHERE gameID = ?";
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
@@ -94,6 +106,7 @@ public class SQLGameDAO implements GameDAO{
         } catch (SQLException e) {
             throw new DataAccessException("Error updating game: " + e.getMessage());
         }
+        return game;
     }
 
     private String serializeGame(ChessGame game) {
@@ -102,23 +115,6 @@ public class SQLGameDAO implements GameDAO{
         }
         catch (Exception e) {
             return new DataAccessException(String.format("Unable to serialize game: %s", e.getMessage())).toString();
-        }
-    }
-
-    @Override
-    public void deleteGame(int gameID) throws DataAccessException {
-        var statement = "DELETE FROM games WHERE gameID = ?";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                ps.setInt(1, gameID);
-
-                int rowsAffected = ps.executeUpdate();
-                if (rowsAffected == 0) {
-                    throw new DataAccessException("Game deletion failed, no rows affected.");
-                }
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException("Error deleting game: " + e.getMessage());
         }
     }
 

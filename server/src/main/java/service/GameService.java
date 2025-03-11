@@ -35,11 +35,8 @@ public class GameService {
         return createdGame;
     }
     public GameData joinGame(int gameID, String joinedColor, String username) throws UserExistsException, BadRequestException, DataAccessException {
-        if (joinedColor == null || username == null || username.isEmpty()) {
-            throw new BadRequestException("Invalid input: color or username is missing.");
-        }
-
         GameData gameToJoin = gameDAO.getGame(gameID);
+
         if (gameToJoin == null) {
             throw new BadRequestException("Game not found.");
         }
@@ -59,11 +56,7 @@ public class GameService {
         } else {
             throw new BadRequestException("Invalid color choice. Choose 'WHITE' or 'BLACK'.");
         }
-
-        gameDAO.updateGame(gameToJoin);
-        GameData updatedGame = gameDAO.getGame(gameID);
-
-        return updatedGame;
+         return gameDAO.updateGame(gameToJoin);
     }
 
     public Collection<GameData> getAllGames() throws DataAccessException {
