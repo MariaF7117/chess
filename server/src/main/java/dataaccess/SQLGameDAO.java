@@ -36,7 +36,7 @@ public class SQLGameDAO implements GameDAO{
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, gameName, gameState FROM games WHERE gameID=?";
+            var statement = "SELECT gameID, gameName, whiteUsername, blackUsername, gameState FROM games WHERE gameID=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 try (var rs = ps.executeQuery()) {
@@ -86,17 +86,26 @@ public class SQLGameDAO implements GameDAO{
     private GameData readGame(ResultSet rs) throws SQLException {
         var gameID = rs.getInt("gameID");
         var gameName = rs.getString("gameName");
-        return new GameData(gameID,ChessGame.TeamColor.WHITE.name(), ChessGame.TeamColor.BLACK.name(), gameName);
+
+        String whiteUsername = rs.getString("whiteUsername");
+        String blackUsername = rs.getString("blackUsername");
+
+        whiteUsername = (whiteUsername != null) ? whiteUsername : null;
+        blackUsername = (blackUsername != null) ? blackUsername : null;
+
+        return new GameData(gameID,whiteUsername, blackUsername, gameName);
     }
 
     @Override
     public GameData updateGame(GameData game) throws DataAccessException {
-        var statement = "UPDATE games SET gameName = ?, game = ? WHERE gameID = ?";
+        var statement = "UPDATE games SET gameName = ?, gameState = ?, whiteUsername = ?, blackUsername = ? WHERE gameID = ?";
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, game.getGameName());
                 ps.setString(2, serializeGame(game.getGame()));
-                ps.setInt(3, game.getGameID());
+                ps.setString(3, game.getWhiteUsername());
+                ps.setString(4, game.getBlackUsername());
+                ps.setInt(5, game.getGameID());
 
                 int rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 0) {
@@ -154,6 +163,8 @@ public class SQLGameDAO implements GameDAO{
             CREATE TABLE IF NOT EXISTS games (
               gameID INT AUTO_INCREMENT,
               gameName VARCHAR(256) NOT NULL,
+              whiteUsername VARCHAR(256) DEFAULT NULL,
+              blackUsername VARCHAR(256) DEFAULT NULL,
               gameState TEXT NOT NULL,
               PRIMARY KEY (gameID)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

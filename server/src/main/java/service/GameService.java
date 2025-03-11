@@ -56,7 +56,9 @@ public class GameService {
         } else {
             throw new BadRequestException("Invalid color choice. Choose 'WHITE' or 'BLACK'.");
         }
-         return gameDAO.updateGame(gameToJoin);
+
+        return gameDAO.updateGame(gameToJoin);
+
     }
 
     public Collection<GameData> getAllGames() throws DataAccessException {
