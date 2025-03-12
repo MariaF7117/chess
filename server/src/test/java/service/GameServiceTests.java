@@ -30,7 +30,7 @@ public class GameServiceTests {
 
 
     @Test
-    void joinGameFailure_InvalidColor() throws DataAccessException {
+    void joinGameFailureInvalidColor() throws DataAccessException {
         GameData game = gameDAO.createGame(new GameData(1, "testGame", null, null, null));
 
         assertThrows(BadRequestException.class, () -> gameService.joinGame(game.getGameID(), "BLUE", "testUser"));
