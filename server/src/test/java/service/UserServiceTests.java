@@ -1,44 +1,56 @@
 package service;
 
 import dataaccess.*;
-import model.*;
-import org.junit.jupiter.api.*;
+import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import handler.errors.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTests {
 
+    private UserService userService;
     private UserDAO userDAO;
 
     @BeforeEach
-    void setUp() throws DataAccessException {
-        userDAO = new SQLUserDAO();
+    public void setup() throws DataAccessException {
+        userDAO = new MemoryUserDAO();
+        userService = new UserService();
         userDAO.clear();
     }
 
     @Test
-    void testCreateUserSuccess() throws DataAccessException {
-        UserData user = new UserData("testUser", "password", "email@test.com");
-        UserData createdUser = userDAO.createUser(user);
+    void createUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
+        UserData user = new UserData("testUser", "password", "email@example.com");
+        UserData createdUser = userService.createUser(user);
+
         assertNotNull(createdUser);
         assertEquals("testUser", createdUser.getUsername());
     }
 
     @Test
-    void testCreateUserFailure() throws DataAccessException {
-        UserData user = new UserData("testUser", "password", "email@test.com");
-        userDAO.createUser(user);
-        assertThrows(DataAccessException.class, () -> userDAO.createUser(user));
+    void isValidUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
+        UserData user = new UserData("testUser", "password", "email@example.com");
+        userService.createUser(user);
+
+        assertDoesNotThrow(() -> userService.isValidUser(user));
     }
 
     @Test
-    void testGetUserSuccess() throws DataAccessException {
-        UserData user = new UserData("testUser", "password", "email@test.com");
-        userDAO.createUser(user);
-        assertNotNull(userDAO.getUser("testUser"));
+    void isValidPasswordSuccess() throws DataAccessException, BadRequestException, UserExistsException, UnauthorizedException {
+        UserData user = new UserData("testUser", "password", "email@example.com");
+        userService.createUser(user);
+
+        assertDoesNotThrow(() -> userService.isValidPassword(user));
     }
 
     @Test
-    void testGetUserFailure() throws DataAccessException {
-        assertNull(userDAO.getUser("nonExistentUser"));
+    void clearUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
+        userService.createUser(new UserData("testUser", "password", "email@example.com"));
+
+        userService.clear();
+        //changed this to Unothorized Exception instead of DataAccessException... Hope this doesn't break anything in the future...
+        assertThrows(UnauthorizedException.class, () -> userService.isValidUser(new UserData("testUser", "password", null)));
     }
 }

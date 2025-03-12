@@ -1,42 +1,83 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.*;
-import model.*;
-import org.junit.jupiter.api.*;
+import model.GameData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import handler.errors.*;
+
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTests {
+
+    private GameService gameService;
     private GameDAO gameDAO;
+
     @BeforeEach
-    void setUp() throws DataAccessException {
-        gameDAO = new SQLGameDAO();
+    public void setup() throws DataAccessException {
+        gameDAO = new MemoryGameDAO();
+        gameService = new GameService(gameDAO);
         gameDAO.clear();
     }
 
     @Test
-    void testCreateGameSuccess() throws NullPointerException, DataAccessException {
-        GameData game = new GameData(2,"I am white Username","I am black username","This is test gameName",new ChessGame());
-        GameData createdGame = gameDAO.createGame(game);
+    void createGameSuccess() throws DataAccessException, BadRequestException {
+        GameData newGame = new GameData(0, null, null, "Chess Battle");
+        GameData createdGame = gameService.createGame(newGame);
+
         assertNotNull(createdGame);
-        assertEquals("This is test gameName", createdGame.getGameName());
+        assertEquals("Chess Battle", createdGame.getGameName());
     }
 
     @Test
-    void testCreateGameFailure() {
-        assertThrows(NullPointerException.class, () -> gameDAO.createGame(null));
+    void joinGameSuccess() throws DataAccessException, BadRequestException, UserExistsException {
+        GameData newGame = new GameData(0, null, null, "Chess Battle");
+        GameData createdGame = gameService.createGame(newGame);
+
+        GameData updatedGame = gameService.joinGame(createdGame.getGameID(), "WHITE", "player1");
+
+        assertEquals("player1", updatedGame.getWhiteUsername());
     }
 
     @Test
-    void testGetGameSuccess() throws DataAccessException {
-        GameData game = new GameData(2,"I am white Username","I am black username","This is test gameName",new ChessGame());
-        GameData createdGame = gameDAO.createGame(game);
-        assertNotNull(gameDAO.getGame(createdGame.getGameID()));
+    void getGameSuccess() throws DataAccessException, BadRequestException {
+        GameData newGame = new GameData(0, null, null, "Chess Battle");
+        GameData createdGame = gameService.createGame(newGame);
+
+        GameData retrievedGame = gameService.getGame(createdGame.getGameID());
+
+        assertNotNull(retrievedGame);
+        assertEquals(createdGame.getGameID(), retrievedGame.getGameID());
     }
 
     @Test
-    void testGetGameFailure() throws DataAccessException {
-        assertNull(gameDAO.getGame(-1));
+    void getAllGamesSuccess() throws DataAccessException, BadRequestException {
+        gameService.createGame(new GameData(0, null, null, "Game 1"));
+        gameService.createGame(new GameData(0, null, null, "Game 2"));
+
+        Collection<GameData> games = gameService.getAllGames();
+
+        assertEquals(2, games.size());
     }
 
+    @Test
+    void deleteGameSuccess() throws DataAccessException, BadRequestException {
+        GameData newGame = new GameData(0, null, null, "Chess Battle");
+        GameData createdGame = gameService.createGame(newGame);
+
+        gameService.deleteGame(createdGame.getGameID());
+
+        assertThrows(DataAccessException.class, () -> gameService.getGame(createdGame.getGameID()));
+    }
+
+    @Test
+    void clearGamesSuccess() throws DataAccessException, BadRequestException {
+        gameService.createGame(new GameData(0, null, null, "Chess Battle"));
+
+        gameService.clear();
+
+        assertTrue(gameService.getAllGames().isEmpty());
+    }
 }

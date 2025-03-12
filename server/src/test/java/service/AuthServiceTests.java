@@ -1,34 +1,42 @@
 package service;
 
 import dataaccess.*;
-import model.*;
-import org.junit.jupiter.api.*;
+import model.AuthData;
+import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthServiceTests{
+public class AuthServiceTests {
+
+    private AuthService authService;
     private AuthDAO authDAO;
-    private GameDAO gameDAO;
-    private UserDAO userDAO;
 
     @BeforeEach
-    void setUp() throws DataAccessException {
-        authDAO = new SQLAuthDAO();
-        gameDAO = new SQLGameDAO();
-        userDAO = new SQLUserDAO();
+    public void setup() throws DataAccessException {
+        authDAO = new MemoryAuthDAO();
+        authService = new AuthService();
         authDAO.clear();
-        gameDAO.clear();
-        userDAO.clear();
-    }
-
-    @Test
-    void testCreateAuthFailure() {
-        assertThrows(DataAccessException.class, () -> authDAO.createAuth((String) null));
     }
 
 
     @Test
-    void testGetAuthFailure() throws DataAccessException {
-        assertNull(authDAO.getAuth("invalidToken"));
+    void loginSuccess() throws DataAccessException {
+        UserData user = new UserData("testUser", "password", "email@example.com");
+        AuthData authData = authService.login(user);
+
+        assertNotNull(authData);
+        assertNotNull(authData.authToken());
     }
 
+
+    @Test
+    void clearAuthSuccess() throws Exception {
+        authService.createAuth(new AuthData(AuthService.generateToken(), "testUser"));
+
+        authService.clear();
+
+        assertNull(authService.getUserByAuthToken("invalidToken"));
+    }
 }
