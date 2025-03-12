@@ -36,12 +36,6 @@ public class UserService {
         }
     }
 
-    public void isValidUser(UserData user) throws BadRequestException, UserExistsException, DataAccessException {
-        UserData isValidUser = userDAO.getUser(user.getUsername());
-        if (isValidUser == null || !user.getPassword().equals(isValidUser.getPassword())) {
-            throw new UnauthorizedException("Invalid username or password");
-        }
-    }
     public void isValidPassword(UserData user) throws UnauthorizedException, DataAccessException {
         UserData storedUser = userDAO.getUser(user.getUsername());
         if (storedUser == null || !BCrypt.checkpw(user.getPassword(), storedUser.getPassword())) {

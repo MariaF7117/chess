@@ -22,11 +22,6 @@ public class AuthData {
         return authToken;
     }
 
-
-    public static String generateToken() {
-        return UUID.randomUUID().toString();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

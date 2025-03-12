@@ -16,7 +16,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void testCreateUser_Success() throws DataAccessException {
+    void testCreateUserSuccess() throws DataAccessException {
         UserData user = new UserData("testUser", "password", "email@test.com");
         UserData createdUser = userDAO.createUser(user);
         assertNotNull(createdUser);
@@ -24,21 +24,21 @@ public class UserServiceTests {
     }
 
     @Test
-    void testCreateUser_Failure() throws DataAccessException {
+    void testCreateUserFailure() throws DataAccessException {
         UserData user = new UserData("testUser", "password", "email@test.com");
         userDAO.createUser(user);
         assertThrows(DataAccessException.class, () -> userDAO.createUser(user));
     }
 
     @Test
-    void testGetUser_Success() throws DataAccessException {
+    void testGetUserSuccess() throws DataAccessException {
         UserData user = new UserData("testUser", "password", "email@test.com");
         userDAO.createUser(user);
         assertNotNull(userDAO.getUser("testUser"));
     }
 
     @Test
-    void testGetUser_Failure() throws DataAccessException {
+    void testGetUserFailure() throws DataAccessException {
         assertNull(userDAO.getUser("nonExistentUser"));
     }
 }

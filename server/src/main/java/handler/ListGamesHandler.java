@@ -24,23 +24,14 @@ public class ListGamesHandler {
         try {
             String authToken = req.headers("authorization");
 
-//            if (authToken == null || authToken.isEmpty()) {
-//                System.out.println("[ERROR] No authorization token provided.");
-//                throw new UnauthorizedException("No authorization token provided.");
-//            }
-
             authService.validate(authToken);
 
             Collection<GameData> games = gameService.getAllGames();
-//            if (games == null) {
-//                games = new ArrayList<>();
-//            }
+
             Gson gson = new GsonBuilder().serializeNulls().create();
             JsonArray jsonArray = gson.toJsonTree(games).getAsJsonArray();
             JsonObject jsonObject = new JsonObject();
             jsonObject.add("games", jsonArray);
-//            String json = gson.toJson(Map.of("games", games));
-
 
             res.status(200);
             return serializer.toJson(jsonObject);

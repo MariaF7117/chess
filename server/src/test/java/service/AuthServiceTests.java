@@ -19,33 +19,16 @@ public class AuthServiceTests{
         gameDAO.clear();
         userDAO.clear();
     }
-//        @Test
-//    void testCreateAuth_Success() throws DataAccessException {
-//        AuthData auth = authDAO.createAuth("testUser");
-//        assertNotNull(auth);
-//        assertEquals("testUser", auth.getUsername());
-//    }
 
     @Test
-    void testCreateAuth_Failure() {
+    void testCreateAuthFailure() {
         assertThrows(DataAccessException.class, () -> authDAO.createAuth((String) null));
     }
 
-//    @Test
-//    void testGetAuth_Success() throws DataAccessException {
-//        AuthData auth = authDAO.createAuth("testUser");
-//        assertNotNull(authDAO.getAuth(auth.getAuthToken()));
-//    }
 
     @Test
-    void testGetAuth_Failure() throws DataAccessException {
+    void testGetAuthFailure() throws DataAccessException {
         assertNull(authDAO.getAuth("invalidToken"));
     }
 
-//    @Test
-//    void testDeleteAuth_Success() throws DataAccessException {
-//        AuthData auth = authDAO.createAuth("testUser");
-//        authDAO.deleteAuth(auth.getAuthToken());
-//        assertNull(authDAO.getAuth(auth.getAuthToken()));
-//    }
 }

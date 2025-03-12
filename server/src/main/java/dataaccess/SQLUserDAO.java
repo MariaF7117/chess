@@ -66,12 +66,12 @@ public class SQLUserDAO implements UserDAO {
             try (var ps = conn.prepareStatement(statement)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param instanceof Long p) ps.setLong(i + 1, p);
-                    else if (param instanceof Double p) ps.setDouble(i + 1, p);
-                    else if (param instanceof Boolean p) ps.setBoolean(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) {ps.setString(i + 1, p);}
+                    else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
+                    else if (param instanceof Long p) {ps.setLong(i + 1, p);}
+                    else if (param instanceof Double p){ ps.setDouble(i + 1, p);}
+                    else if (param instanceof Boolean p){ ps.setBoolean(i + 1, p);}
+                    else if (param == null) {ps.setNull(i + 1, NULL);}
                 }
                 return ps.executeUpdate();
             }

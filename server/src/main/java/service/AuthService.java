@@ -21,14 +21,6 @@ public class AuthService {
             userDAO = new MemoryUserDAO();
         }
     }
-
-//    public AuthData createAuth(AuthData authData) throws DataAccessException {
-//        if (authData.authToken() == null || authData.authToken().isEmpty()) {
-//            throw new DataAccessException("Invalid auth token");
-//        }
-//        authDAO.createAuth(String.valueOf(authData));
-//        return authDAO.getAuth(authData.authToken());
-//    }
     public AuthData loginUser(UserData user) throws DataAccessException {
         return authDAO.createAuth(user.getUsername());
     }

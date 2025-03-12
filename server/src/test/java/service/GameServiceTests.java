@@ -15,7 +15,7 @@ public class GameServiceTests {
     }
 
     @Test
-    void testCreateGame_Success() throws NullPointerException, DataAccessException {
+    void testCreateGameSuccess() throws NullPointerException, DataAccessException {
         GameData game = new GameData(2,"I am white Username","I am black username","This is test gameName",new ChessGame());
         GameData createdGame = gameDAO.createGame(game);
         assertNotNull(createdGame);
@@ -23,19 +23,19 @@ public class GameServiceTests {
     }
 
     @Test
-    void testCreateGame_Failure() {
+    void testCreateGameFailure() {
         assertThrows(NullPointerException.class, () -> gameDAO.createGame(null));
     }
 
     @Test
-    void testGetGame_Success() throws DataAccessException {
+    void testGetGameSuccess() throws DataAccessException {
         GameData game = new GameData(2,"I am white Username","I am black username","This is test gameName",new ChessGame());
         GameData createdGame = gameDAO.createGame(game);
         assertNotNull(gameDAO.getGame(createdGame.getGameID()));
     }
 
     @Test
-    void testGetGame_Failure() throws DataAccessException {
+    void testGetGameFailure() throws DataAccessException {
         assertNull(gameDAO.getGame(-1));
     }
 
