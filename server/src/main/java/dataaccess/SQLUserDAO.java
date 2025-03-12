@@ -2,6 +2,8 @@ package dataaccess;
 
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
+
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,7 +20,7 @@ public class SQLUserDAO implements UserDAO {
     public UserData createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         var hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        int rowsAffected = executeUpdate(statement, user.getUsername(), hashedPassword, user.getEmail());
+        int rowsAffected = DatabaseManager.executeUpdate(statement, user.getUsername(), hashedPassword, user.getEmail());
         if (rowsAffected == 0) {
             throw new DataAccessException("User creation failed, no rows affected.");
         }
@@ -47,7 +49,7 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public void clear() throws DataAccessException {
         var statement = "DELETE FROM users";
-        executeUpdate(statement);
+        DatabaseManager.executeUpdate(statement);
     }
 
     private final String[] createStatements = {
@@ -61,24 +63,5 @@ public class SQLUserDAO implements UserDAO {
             """
     };
 
-
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) {ps.setString(i + 1, p);}
-                    else if (param instanceof Integer p){ ps.setInt(i + 1, p);}
-                    else if (param instanceof Long p) {ps.setLong(i + 1, p);}
-                    else if (param instanceof Double p){ ps.setDouble(i + 1, p);}
-                    else if (param instanceof Boolean p){ ps.setBoolean(i + 1, p);}
-                    else if (param == null) {ps.setNull(i + 1, NULL);}
-                }
-                return ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException("unable to update database: " + e.getMessage());
-        }
-    }
 
 }
