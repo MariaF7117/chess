@@ -61,6 +61,7 @@ public class SQLUserDAO implements UserDAO {
             """
     };
 
+
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
@@ -79,6 +80,5 @@ public class SQLUserDAO implements UserDAO {
             throw new DataAccessException("unable to update database: " + e.getMessage());
         }
     }
-
 
 }

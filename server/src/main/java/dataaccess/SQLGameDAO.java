@@ -12,7 +12,7 @@ import java.util.Collection;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class SQLGameDAO implements GameDAO{
+public class SQLGameDAO implements GameDAO {
     private final Gson gson = new Gson();
 
     public SQLGameDAO() throws DataAccessException {
@@ -23,10 +23,10 @@ public class SQLGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData gameData) throws DataAccessException {
         ChessGame game = new ChessGame();
-        int gameID =0;
+        int gameID = 0;
         String gameJson = gson.toJson(game);
         String sql = "INSERT INTO games (whiteUsername, blackUsername, gameName, chessGame) VALUES (?,?,?,?)";
-        try (Connection conn = DatabaseManager.getConnection()){
+        try (Connection conn = DatabaseManager.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, null);
                 ps.setString(2, null);
@@ -41,8 +41,7 @@ public class SQLGameDAO implements GameDAO{
                     }
                 }
             }
-        }
-        catch (SQLException | DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("Can't Create without adequate data.");
         }
 
@@ -50,7 +49,7 @@ public class SQLGameDAO implements GameDAO{
             throw new DataAccessException("DataAccessException");
         }
 
-        GameData newGameData= new GameData(
+        GameData newGameData = new GameData(
                 gameID,
                 null,
                 null,
@@ -93,6 +92,7 @@ public class SQLGameDAO implements GameDAO{
 
         return games;
     }
+
     private ArrayList<Integer> getAllGameIDs() throws DataAccessException {
         String sql = "SELECT gameID FROM games";
         ArrayList<Integer> gameIDs = new ArrayList<>();
@@ -123,7 +123,7 @@ public class SQLGameDAO implements GameDAO{
         whiteUsername = (whiteUsername != null) ? whiteUsername : null;
         blackUsername = (blackUsername != null) ? blackUsername : null;
 
-        return new GameData(gameID,whiteUsername, blackUsername, gameName, chessGame);
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class SQLGameDAO implements GameDAO{
                 ps.setString(1, game.getWhiteUsername());
                 ps.setString(2, game.getBlackUsername());
                 ps.setString(3, game.getGameName());
-                ps.setString(4,gameJson);
+                ps.setString(4, gameJson);
                 ps.setInt(5, game.getGameID());
 
 
@@ -155,7 +155,6 @@ public class SQLGameDAO implements GameDAO{
         var statement = "DELETE FROM games";
         executeUpdate(statement);
     }
-
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
