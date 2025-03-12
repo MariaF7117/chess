@@ -77,7 +77,7 @@ public class SQLGameDAO implements GameDAO {
         }
         return null;
     }
-
+//this is to test
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
         ArrayList<Integer> gameIDs = getAllGameIDs();
