@@ -9,16 +9,17 @@ public class GameData {
     private int gameID;
     private  String whiteUsername;
     private  String blackUsername;
-    private final String gameName;
-    private final ChessGame game;
+    private String gameName;
+    private ChessGame game;
 
-   public GameData(int gameId, String whiteUsername, String blackUsername, String gameName) {
+   public GameData(int gameId, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         this.gameID = gameId;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = new ChessGame();
     }
+
 
     public int getGameID() {
         return gameID;

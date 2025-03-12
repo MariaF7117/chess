@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.*;
@@ -13,9 +14,9 @@ public class MemoryGameDAO implements GameDAO {
 
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
-
+        ChessGame newChessGame = new ChessGame();
         int newGameId = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
-        GameData newGame = new GameData(newGameId, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName());
+        GameData newGame = new GameData(newGameId, game.getWhiteUsername(), game.getBlackUsername(), game.getGameName(),newChessGame);
         games.put(newGameId, newGame);
 
         return newGame;

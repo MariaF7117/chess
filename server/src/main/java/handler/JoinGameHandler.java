@@ -17,14 +17,15 @@ import service.GameService;
 public class JoinGameHandler {
     private final Gson serializer = new Gson();
     private final ErrorHandler errorHandler = new ErrorHandler();
+
     public Object joinGame(Request req, Response res, AuthService authService, GameService gameService) {
         res.type("application/json");
         try {
             String authToken = req.headers("Authorization");
             authService.validate(authToken);
-            AuthData auth = authService.getUserByAuthToken(authToken);
+            AuthData user = authService.getUserByAuthToken(authToken);
 
-            String username = auth.getUsername();
+            String username = user.getUsername();
             JsonElement bodyJsonElement = JsonParser.parseString(req.body());
             JsonObject jsonObject = bodyJsonElement.getAsJsonObject();
 
