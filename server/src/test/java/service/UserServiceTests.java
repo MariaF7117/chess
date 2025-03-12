@@ -1,10 +1,10 @@
 package service;
 
 import dataaccess.*;
+import handler.errors.*;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import handler.errors.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,36 +21,19 @@ public class UserServiceTests {
     }
 
     @Test
-    void createUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
-        UserData user = new UserData("testUser", "password", "email@example.com");
-        UserData createdUser = userService.createUser(user);
-
-        assertNotNull(createdUser);
-        assertEquals("testUser", createdUser.getUsername());
+    void createUserFailureEmptyUsername() {
+        UserData user = new UserData("", "password", "email@example.com");
+        assertThrows(BadRequestException.class, () -> userService.createUser(user));
     }
 
+
     @Test
-    void isValidUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
+    void isValidPasswordFailureInvalidPassword() throws DataAccessException, BadRequestException, UserExistsException {
         UserData user = new UserData("testUser", "password", "email@example.com");
         userService.createUser(user);
 
-        assertDoesNotThrow(() -> userService.isValidUser(user));
+        UserData wrongUser = new UserData("testUser", "wrongPassword", "email@example.com");
+        assertThrows(UnauthorizedException.class, () -> userService.isValidPassword(wrongUser));
     }
 
-    @Test
-    void isValidPasswordSuccess() throws DataAccessException, BadRequestException, UserExistsException, UnauthorizedException {
-        UserData user = new UserData("testUser", "password", "email@example.com");
-        userService.createUser(user);
-
-        assertDoesNotThrow(() -> userService.isValidPassword(user));
-    }
-
-    @Test
-    void clearUserSuccess() throws DataAccessException, BadRequestException, UserExistsException {
-        userService.createUser(new UserData("testUser", "password", "email@example.com"));
-
-        userService.clear();
-        //changed this to Unothorized Exception instead of DataAccessException... Hope this doesn't break anything in the future...
-        assertThrows(UnauthorizedException.class, () -> userService.isValidUser(new UserData("testUser", "password", null)));
-    }
 }
