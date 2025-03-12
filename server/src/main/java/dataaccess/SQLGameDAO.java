@@ -162,9 +162,9 @@ public class SQLGameDAO implements GameDAO{
             """
             CREATE TABLE IF NOT EXISTS games (
               gameID INT AUTO_INCREMENT,
+              whiteUsername VARCHAR(256),
+              blackUsername VARCHAR(256),
               gameName VARCHAR(256) NOT NULL,
-              whiteUsername VARCHAR(256) DEFAULT NULL,
-              blackUsername VARCHAR(256) DEFAULT NULL,
               gameState TEXT NOT NULL,
               PRIMARY KEY (gameID)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
