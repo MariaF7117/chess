@@ -33,6 +33,8 @@ public class DatabaseManager {
         }
     }
 
+    private Object createStatements;
+
     /**
      * Creates the database if it does not already exist.
      */
@@ -69,4 +71,18 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
+
+    public static void configureDatabase(String[] createStatements) throws DataAccessException {
+        createDatabase();
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Unable to configure database: " + ex.getMessage());
+        }
+    }
+
 }

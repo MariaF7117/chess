@@ -16,7 +16,7 @@ public class SQLGameDAO implements GameDAO{
     private final Gson gson = new Gson();
 
     public SQLGameDAO() throws DataAccessException {
-        configureDatabase();
+        DatabaseManager.configureDatabase(createStatements);
 
     }
 
@@ -193,19 +193,4 @@ public class SQLGameDAO implements GameDAO{
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
-    //turn chessGame object into mySQL and then retrieve object later and turn back to json: (try serializing and deserializing)
-
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DataAccessException("Unable to configure database: " + ex.getMessage());
-        }
-    }
 }
