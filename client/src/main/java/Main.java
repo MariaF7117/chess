@@ -3,7 +3,7 @@ import ui.Menu;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String serverUrl = "http://localhost:8080";
         Menu menu = new Menu(serverUrl);
 
