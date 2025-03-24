@@ -10,13 +10,16 @@ public class Main {
         System.out.println("Type 'Help' to get started");
         Scanner scanner = new Scanner(System.in);
 
-        String input = scanner.nextLine();
-
-        if (input.equalsIgnoreCase("quit")) {
-            System.out.println("You entered quit.");
-        }
-        else{
+        while (true) {
+            System.out.print("> ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("quit")) {
+                System.out.println("Exiting Chess Client...");
+                break;
+            }
             menu.handleInput(input);
         }
+        scanner.close();
+
     }
 }
