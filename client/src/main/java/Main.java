@@ -1,27 +1,23 @@
-import ui.Menu;
+import ui.Repl;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         String serverUrl = "http://localhost:8080";
-        Menu menu = new Menu(serverUrl);
-
+        Repl menu = new Repl(serverUrl);
         System.out.println("♕ CS240 Chess Client");
         System.out.println("Type 'Help' to get started");
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                String input = scanner.nextLine().trim();
+        Scanner scanner = new Scanner(System.in);
 
-                if (input.equalsIgnoreCase("quit")) {
-                    break;
-                }
+        String input = scanner.nextLine();
 
-                if (!input.isEmpty()) {
-                    menu.handleInput(input);
-                }
-            }
+        if (input.equalsIgnoreCase("quit")) {
+            System.out.println("You entered quit.");
+        }
+        else{
+            menu.handleInput(input);
         }
     }
 }
