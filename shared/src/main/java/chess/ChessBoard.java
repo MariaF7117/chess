@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -29,6 +31,18 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[position.getRow()-1][position.getColumn()-1] = piece;
+    }
+    public Map<ChessPosition, ChessPiece> getAllPieces() {
+        Map<ChessPosition, ChessPiece> pieces = new HashMap<>();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece piece = board[row][col];
+                if (piece != null) {
+                    pieces.put(new ChessPosition(row + 1, col + 1), piece);
+                }
+            }
+        }
+        return pieces;
     }
 
     /**
