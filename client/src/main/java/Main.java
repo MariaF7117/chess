@@ -8,7 +8,6 @@ public class Main {
         Repl menu = new Repl(serverUrl);
         System.out.println("♕ CS240 Chess Client");
         System.out.println("Type 'Help' to get started");
-
         Scanner scanner = new Scanner(System.in);
 
         String input = scanner.nextLine();
