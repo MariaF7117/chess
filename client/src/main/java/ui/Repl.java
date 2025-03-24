@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 
@@ -22,11 +23,14 @@ public class Repl {
     private String username;
     private String password;
     private String authToken;
+    private GameData gameData;
     private UserState currentState = UserState.LOGGED_OUT;
     ServerFacade server = new ServerFacade();
     private GameData[] gameList;private
     Map<Integer, Integer> gameIdMap = new HashMap<>();
     Map<Integer, Integer> reverseMap = new HashMap<>();
+   // private final DrawBoard drawBoard = new DrawBoard();
+
 
 
 
@@ -72,7 +76,12 @@ public class Repl {
     private void login(String[] params) throws Exception{
         username = params[1];
         password = params[2];
-        server.login(username,password);
+        loginUser(username,password);
+    }
+    private void loginUser(String username, String password) throws Exception {
+        AuthData loginData = server.login(username, password);
+        authToken = loginData.authToken();
+        currentState = UserState.LOGGED_IN;
     }
 
     private void register(String[] params) throws Exception{
@@ -80,6 +89,7 @@ public class Repl {
         password = params[2];
         String email = params[3];
         server.register(username,password,email);
+        loginUser(username,password);
     }
 
     private void logout()throws Exception{
@@ -96,7 +106,7 @@ public class Repl {
         exit(0);
     }
 
-    private void list(String[] params) throws Exception{
+    private void list() throws Exception{
         updateGameList();
 
         for (GameData gameData : gameList) {
@@ -110,8 +120,44 @@ public class Repl {
         }
     }
     private void createGame(String[] params) throws Exception{
+        String gameName = params[1].toString();
+        gameData = server.createGame(gameName,authToken);
+        updateGameList();
+    }
+
+    private void join(String[] params) throws Exception{
+        String teamColor = params[2];
+        updateGameList();
+        int joinGameID = Integer.parseInt(params[1]);
+        ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor);
+
+        joinGameID = reverseMap.get(joinGameID);
+        if (team == ChessGame.TeamColor.BLACK) {
+            currentState = UserState.BLACK;
+        }
+        else {
+            currentState = UserState.WHITE;
+        }
+        gameData = server.joinGame(joinGameID, team, authToken);
+        //draw boards
+        //drawBoard.printBothBoards();
+        updateGameList();
 
     }
+
+    private void observe(String[] params) throws Exception{
+        int gameID = Integer.parseInt(params[1]);
+        gameList = server.listGames(authToken);
+        for (GameData game : gameList) {
+            if (game.getGameID() == gameID) {
+                gameData = game;
+                //drawBoard.printBothBoards();
+                currentState = UserState.OBSERVER;
+            }
+        }
+
+    }
+
 
 
 
