@@ -90,8 +90,11 @@ public class ServerFacade {
             throw new RuntimeException("HTTP request failed with status: " + response.statusCode() + " and body: " + response.body());
         }
     }
+    public void clear() throws Exception {
+        sendRequest("DELETE", "/db", null, null, null);
+    }
 
-    private void handleException(Exception e, String message) {
+        private void handleException(Exception e, String message) {
         System.err.println(message + ": " + e.getMessage());
     }
 }
