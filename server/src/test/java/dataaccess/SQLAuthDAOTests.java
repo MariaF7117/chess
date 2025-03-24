@@ -31,5 +31,8 @@ public class SQLAuthDAOTests {
             assertNull(authDAO.getAuth("invalidToken"));
         }
 
+
+        //retrieve me a game that is not there for a negative test. - throw exception not in database
+
     }
 
