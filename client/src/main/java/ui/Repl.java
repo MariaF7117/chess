@@ -139,6 +139,7 @@ public class Repl {
         currentState = UserState.LOGGED_OUT;
         username = null;
         authToken = null;
+        System.out.println("Successfully logged out, type 'help' for options");
     }
 
     private void quit() throws Exception{
@@ -205,17 +206,41 @@ public class Repl {
 
     }
 
-    private void observe(String[] params) throws Exception{
-        int gameID = Integer.parseInt(params[1]);
-        gameList = server.listGames(authToken);
-        for (GameData game : gameList) {
-            if (game.getGameID() == gameID) {
-                gameData = game;
-                drawBoard.printBothBoards();
-                currentState = UserState.OBSERVER;
+    private void observe(String[] params) throws Exception {
+        try {
+            if (params.length < 2) {
+                System.out.println("Error: You must provide a game ID. See 'help' for usage.");
+                return;
             }
+
+            int userInputID = Integer.parseInt(params[1]);
+            updateGameList();
+
+            Integer gameID = reverseMap.get(userInputID);
+            if (gameID == null) {
+                System.out.println("Error: Invalid game ID. Use 'list' to see available games.");
+                return;
+            }
+
+            for (GameData game : gameList) {
+                if (game.getGameID() == gameID) {
+                    gameData = game;
+                    currentState = UserState.OBSERVER;
+                    drawBoard.printBothBoards();
+                    System.out.println("Now observing game: " + gameData.getGameName());
+                    return;
+                }
+            }
+
+            System.out.println("Error: Game not found.");
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid game ID format. It should be a number.");
+        } catch (Exception e) {
+            System.out.println("Failed to observe game: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
     private void updateGameList() throws Exception {
         gameList = server.listGames(authToken);
