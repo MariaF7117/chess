@@ -6,11 +6,6 @@ import model.GameData;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.lang.System.exit;
-import static ui.EscapeSequences.RESET_TEXT_UNDERLINE;
-import static ui.EscapeSequences.SET_TEXT_UNDERLINE;
-
 public class Repl {
     private enum UserState {
         LOGGED_OUT,
@@ -24,18 +19,19 @@ public class Repl {
     private String password;
     private String authToken;
     private GameData gameData;
+    public String serverUrl;
     private UserState currentState = UserState.LOGGED_OUT;
     ServerFacade server = new ServerFacade();
     private GameData[] gameList;private
     Map<Integer, Integer> gameIdMap = new HashMap<>();
     Map<Integer, Integer> reverseMap = new HashMap<>();
-   // private final DrawBoard drawBoard = new DrawBoard();
+    private final DrawBoard drawBoard = new DrawBoard();
 
 
 
 
     public Repl(String serverUrl){
-
+        serverUrl = "http://localhost:8080";
     }
 
     public void handleInput(String input)throws Exception{
@@ -68,28 +64,74 @@ public class Repl {
     }
 
     private void printHelp(){
-        System.out.println("if LOGGED_OUT: options = login" + "\n" + "register" + "\n" + "help" + "\n" + "quit");
-        System.out.println("if LOGGED_IN: options = logout" + "\n" + "list" + "\n" + "createGame" + "\n" + "join"
-                + "\n" + "observe" + "\n" + "help" + "\n" + "quit");
+        if(currentState == UserState.LOGGED_OUT){
+            System.out.println("register <username> <password> <email>");
+            System.out.println("login <username> <password>");
+            System.out.println("help");
+            System.out.println("quit");
+
+        }
+        else if(currentState == UserState.LOGGED_IN) {
+            System.out.println("logout <username> <password> <email>");
+            System.out.println("list");
+            System.out.println("create <gameName>");
+            System.out.println("join <gameID> <color>");
+            System.out.println("observe <gameID>");
+            System.out.println("help");
+            System.out.println("quit");
+        }
     }
 
     private void login(String[] params) throws Exception{
-        username = params[1];
-        password = params[2];
-        loginUser(username,password);
+        try {
+            if (params.length < 3) {
+                throw new IllegalArgumentException("Login requires a username and password.");
+            }
+            username = params[1];
+            password = params[2];
+            loginUser(username, password);
+            System.out.println("Successfully Logged In, type 'help' for options");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Login failed: " + e.getMessage());
+        } catch (Exception e) {
+            if (e.getMessage().contains("User does not exist")) {
+                System.out.println("Login failed: Username not found. Please register first.");
+            } else if (e.getMessage().contains("Invalid password")) {
+                System.out.println("Login failed: Incorrect password. Please try again.");
+            } else {
+                System.out.println("Login failed: " + e.getMessage());
+            }
+        }
     }
     private void loginUser(String username, String password) throws Exception {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Username and password cannot be empty.");
+        }
         AuthData loginData = server.login(username, password);
         authToken = loginData.authToken();
         currentState = UserState.LOGGED_IN;
     }
 
     private void register(String[] params) throws Exception{
-        username = params[1];
-        password = params[2];
-        String email = params[3];
-        server.register(username,password,email);
-        loginUser(username,password);
+        try {
+            username = params[1];
+            password = params[2];
+            String email = params[3];
+
+            server.register(username, password, email);
+            loginUser(username, password);
+            System.out.println("Registration successful! You are now logged in.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Registration failed: Invalid input. Please check your details and try again.");
+        } catch (Exception e) {
+            if (e.getMessage().contains("User already exists")) {
+                System.out.println("Registration failed: Username already taken. Try a different one.");
+            } else if (e.getMessage().contains("already logged in")) {
+                System.out.println("Registration failed: You are already logged in. Logout before registering a new account.");
+            } else {
+                System.out.println("Registration failed: " + e.getMessage());
+            }
+        }
     }
 
     private void logout()throws Exception{
@@ -103,7 +145,6 @@ public class Repl {
         if (currentState.equals(UserState.LOGGED_IN)) {
             logout();
         }
-        exit(0);
     }
 
     private void list() throws Exception{
@@ -113,23 +154,42 @@ public class Repl {
 
             int gameId = gameIdMap.get(gameData.getGameID());
 
-            System.out.print("Game Name: " + gameData.getGameName());
-            System.out.print(" Game ID: "+ gameId);
-            System.out.print(" White Player: " + gameData.getWhiteUsername() != null ? gameData.getWhiteUsername() : "Empty");
-            System.out.print(" Black Player: " + gameData.getBlackUsername() != null ? gameData.getBlackUsername() : "Empty" + "\n");
+            System.out.println("Game Name: " + gameData.getGameName());
+            System.out.println(" Game ID: "+ gameId);
+            System.out.println(" White Player: " + gameData.getWhiteUsername() != null ? gameData.getWhiteUsername() : "Empty");
+            System.out.println(" Black Player: " + gameData.getBlackUsername() != null ? gameData.getBlackUsername() : "Empty" + "\n");
         }
     }
-    private void createGame(String[] params) throws Exception{
-        String gameName = params[1].toString();
-        gameData = server.createGame(gameName,authToken);
-        updateGameList();
+    private void createGame(String[] params) {
+        try {
+            if (params.length < 2) {
+                System.out.println("Error: You must provide a game name. See 'help' for usage.");
+                return;
+            }
+
+            StringBuilder nameBuilder = new StringBuilder();
+            for (int i = 1; i < params.length; i++) {
+                nameBuilder.append(params[i]).append(" ");
+            }
+            String gameName = nameBuilder.toString().trim(); // Trim trailing space
+
+            gameData = server.createGame(gameName, authToken);
+            updateGameList();
+
+            int gameId = gameIdMap.get(gameData.getGameID());
+            System.out.println("Game '" + gameName + "' created with ID: " + gameId);
+        } catch (Exception e) {
+            System.out.println("Failed to create game: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
+            e.printStackTrace(); // Debugging purposes
+        }
     }
+
 
     private void join(String[] params) throws Exception{
         String teamColor = params[2];
         updateGameList();
         int joinGameID = Integer.parseInt(params[1]);
-        ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor);
+        ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor.toUpperCase());
 
         joinGameID = reverseMap.get(joinGameID);
         if (team == ChessGame.TeamColor.BLACK) {
@@ -140,7 +200,7 @@ public class Repl {
         }
         gameData = server.joinGame(joinGameID, team, authToken);
         //draw boards
-        //drawBoard.printBothBoards();
+        drawBoard.printBothBoards();
         updateGameList();
 
     }
@@ -151,15 +211,11 @@ public class Repl {
         for (GameData game : gameList) {
             if (game.getGameID() == gameID) {
                 gameData = game;
-                //drawBoard.printBothBoards();
+                drawBoard.printBothBoards();
                 currentState = UserState.OBSERVER;
             }
         }
-
     }
-
-
-
 
     private void updateGameList() throws Exception {
         gameList = server.listGames(authToken);
