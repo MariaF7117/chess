@@ -30,14 +30,19 @@ public class DrawBoard {
     }
 
     private void initializeBoard() {
-        String[] colLabels = {" ", " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H ", " "};
+        String[] colLabels = {"   ", " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H ", " "};
         String[] rowLabels = {" ", " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 ", " "};
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                if (row == 0 || row == 9) chessBoard[row][col] = colLabels[col];
-                else if (col == 0 || col == 9) chessBoard[row][col] = rowLabels[row];
-                else chessBoard[row][col] = (row + col) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE + " " : EscapeSequences.SET_BG_COLOR_BLACK + " ";
+                if (row == 0 || row == 9) {
+                    chessBoard[row][col] = colLabels[col];
+                } else if (col == 0 || col == 9) {
+                    chessBoard[row][col] = rowLabels[row];
+                } else {
+                    String bgColor = (row + col) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
+                    chessBoard[row][col] = bgColor + "   ";
+                }
             }
         }
     }
@@ -49,7 +54,7 @@ public class DrawBoard {
         for (var entry : pieceMap.entrySet()) {
             ChessPiece piece = entry.getValue();
             ChessPosition pos = entry.getKey();
-            int row = pos.getRow();
+            int row = 9 - pos.getRow();
             int col = pos.getColumn();
 
             String bgColor = (row + col) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
