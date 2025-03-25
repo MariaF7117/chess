@@ -27,11 +27,7 @@ public class Repl {
     Map<Integer, Integer> reverseMap = new HashMap<>();
     private final DrawBoard drawBoard = new DrawBoard();
 
-
-
-
     public Repl(String serverUrl){
-
     }
 
     public void handleInput(String input)throws Exception{
@@ -95,8 +91,8 @@ public class Repl {
         } catch (IllegalArgumentException e) {
             System.out.println("Login failed: " + e.getMessage());
         } catch (Exception e) {
-                System.out.println("Login failed: That username && password combination does not exist");
-            }
+            System.out.println("Login failed: That username and password combination does not exist.");
+        }
     }
     private void loginUser(String username, String password) throws Exception {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
