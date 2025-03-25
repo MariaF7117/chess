@@ -68,7 +68,7 @@ public class Repl {
 
         }
         else if(currentState == UserState.LOGGED_IN) {
-            System.out.println("logout <username> <password> <email>");
+            System.out.println("logout");
             System.out.println("list");
             System.out.println("create <gameName>");
             System.out.println("join <gameID> <color>");
