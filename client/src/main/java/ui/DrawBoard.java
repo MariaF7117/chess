@@ -14,8 +14,10 @@ public class DrawBoard {
     }
 
     public void printBothBoards() {
-        printBoard(getReversedBoard());
+        System.out.println("White Board View:");
         printBoard(chessBoard);
+        System.out.println("Black Board View:");
+        printBoard(getReversedBoard());
         System.out.println(EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR);
     }
 
@@ -76,9 +78,13 @@ public class DrawBoard {
 
     private String[][] getReversedBoard() {
         String[][] reversed = new String[10][10];
+
         for (int row = 0; row < 10; row++) {
-            System.arraycopy(chessBoard[9 - row], 0, reversed[row], 0, 10);
+            for (int col = 0; col < 10; col++) {
+                reversed[row][col] = chessBoard[9 - row][9 - col];
+            }
         }
         return reversed;
     }
+
 }

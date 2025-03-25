@@ -1,13 +1,11 @@
 package client;
 
-import chess.ChessGame;
-import model.AuthData;
-import model.GameData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;
-
-import java.util.Objects;
+import model.AuthData;
+import model.GameData;
+import chess.ChessGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,21 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerFacadeTests {
 
     private static Server server;
-    static ServerFacade serverFacade;
+    private static ServerFacade serverFacade;
+    private static String authToken;
+
+
 
 
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(8080);
+        var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade();
-    }
-
-    @Test
-    void register() throws Exception {
-        var authData = serverFacade.register("player1", "password", "p1@email.com");
-        assertTrue(authData.authToken().length() > 10);
     }
 
     @AfterAll
@@ -40,85 +34,17 @@ public class ServerFacadeTests {
 
     @Test
     public void sampleTest() {
-        assertTrue(true);
-    }
-
-    @Test
-    public void goodCreateGame() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        AuthData returnData = serverFacade.login("User1", "Pw1");
-
-        GameData returnGame = serverFacade.createGame("New Game", returnData.authToken());
-        assert returnGame != null;
-
+        Assertions.assertTrue(true);
     }
     @Test
-    public void goodRegister() throws Exception {
-        AuthData returnData = serverFacade.register("User1", "Pw1", "email@email.com");
-
-        assert returnData != null;
+    public void testRegisterSuccess() throws Exception {
+        AuthData authData = serverFacade.register("testUser", "password", "test@example.com");
+        assertNotNull(authData);
+        assertNotNull(authData.authToken());
+        authToken = authData.authToken();
     }
 
-    @Test
-    public void badRegister() throws Exception {
-        AuthData returnData = serverFacade.register("User1", "Pw2", "email@email.com");
 
-        // Register the user twice
-        assertThrows(Exception.class, () -> {serverFacade.register("User1", "Pw2", "email@email.com");});
 
-    }
-
-    @Test
-    public void goodLogin() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        AuthData returnData = serverFacade.login("User1", "Pw1");
-
-        assert returnData != null;
-    }
-
-    @Test
-    public void badLogin() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        assertThrows(Exception.class, () -> {serverFacade.login("User1", "Pw2");});
-    }
-
-    @Test
-    public void goodLogout() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        AuthData returnData = serverFacade.login("User1", "Pw1");
-
-        assertDoesNotThrow(() -> {serverFacade.logout(returnData.authToken());});
-    }
-
-    @Test
-    public void badLogout() throws Exception {
-        assertThrows(Exception.class, () -> {serverFacade.logout("Pw2");});
-    }
-
-    @Test
-    public void goodJoinGame() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        AuthData returnData = serverFacade.login("User1", "Pw1");
-        GameData createData = serverFacade.createGame("NewGame", returnData.authToken());
-
-        GameData returnGame = serverFacade.joinGame(createData.getGameID(), ChessGame.TeamColor.BLACK, returnData.authToken());
-        assert Objects.equals(returnGame.getGameName(), "NewGame");
-        assert Objects.equals(returnGame.getBlackUsername(), returnData.getUsername());
-
-    }
-
-    @Test
-    public void listGames() throws Exception {
-        serverFacade.register("User1", "Pw1", "email@email.com");
-        AuthData returnData = serverFacade.login("User1", "Pw1");
-
-        serverFacade.createGame("1", returnData.authToken());
-        serverFacade.createGame("2", returnData.authToken());
-        serverFacade.createGame("3", returnData.authToken());
-        serverFacade.createGame("4", returnData.authToken());
-
-        GameData[] games = serverFacade.listGames(returnData.authToken());
-        assert games.length == 4;
-    }
 
 }

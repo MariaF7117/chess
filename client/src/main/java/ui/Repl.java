@@ -22,7 +22,7 @@ public class Repl {
     public String serverUrl;
     private UserState currentState = UserState.LOGGED_OUT;
     ServerFacade server = new ServerFacade();
-    private GameData[] gameList;private
+    private GameData[] gameList;
     Map<Integer, Integer> gameIdMap = new HashMap<>();
     Map<Integer, Integer> reverseMap = new HashMap<>();
     private final DrawBoard drawBoard = new DrawBoard();
@@ -151,14 +151,30 @@ public class Repl {
     private void list() throws Exception{
         updateGameList();
 
-        for (GameData gameData : gameList) {
+        if(gameList.length == 0){
+            System.out.println("There are no games in list create game");
+        }
+        else{
+            for (GameData gameData : gameList) {
 
-            int gameId = gameIdMap.get(gameData.getGameID());
+                int gameId = gameIdMap.get(gameData.getGameID());
 
-            System.out.println("Game Name: " + gameData.getGameName());
-            System.out.println(" Game ID: "+ gameId);
-            System.out.println(" White Player: " + gameData.getWhiteUsername() != null ? gameData.getWhiteUsername() : "Empty");
-            System.out.println(" Black Player: " + gameData.getBlackUsername() != null ? gameData.getBlackUsername() : "Empty" + "\n");
+                System.out.println("Game Name: " + gameData.getGameName());
+                System.out.println("Game ID: " + gameId);
+                if(gameData.getWhiteUsername() == null){
+                    System.out.println("White Username Available");
+                }
+                else if(gameData.getWhiteUsername() != null){
+                    System.out.println("White Player: " + gameData.getWhiteUsername());
+                }
+                if(gameData.getBlackUsername() == null){
+                    System.out.println("Black Username Available" + "\n");
+                }
+                else if(gameData.getBlackUsername() != null){
+                    System.out.println("Black Player: " + gameData.getBlackUsername()  + "\n");
+                }
+
+            }
         }
     }
     private void createGame(String[] params) {
@@ -167,12 +183,11 @@ public class Repl {
                 System.out.println("Error: You must provide a game name. See 'help' for usage.");
                 return;
             }
-
             StringBuilder nameBuilder = new StringBuilder();
             for (int i = 1; i < params.length; i++) {
                 nameBuilder.append(params[i]).append(" ");
             }
-            String gameName = nameBuilder.toString().trim(); // Trim trailing space
+            String gameName = nameBuilder.toString().trim();
 
             gameData = server.createGame(gameName, authToken);
             updateGameList();
@@ -181,28 +196,49 @@ public class Repl {
             System.out.println("Game '" + gameName + "' created with ID: " + gameId);
         } catch (Exception e) {
             System.out.println("Failed to create game: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
-            e.printStackTrace(); // Debugging purposes
+            e.printStackTrace();
         }
     }
 
 
     private void join(String[] params) throws Exception{
-        String teamColor = params[2];
-        updateGameList();
-        int joinGameID = Integer.parseInt(params[1]);
-        ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor.toUpperCase());
+        try {
+            if (params.length < 3) {
+                System.out.println("Error: You must provide a game ID and a color. See 'help' for usage.");
+                return;
+            }
 
-        joinGameID = reverseMap.get(joinGameID);
-        if (team == ChessGame.TeamColor.BLACK) {
-            currentState = UserState.BLACK;
+            String teamColor = params[2].toUpperCase();
+            updateGameList();
+            int joinGameID = Integer.parseInt(params[1]);
+
+            if (!reverseMap.containsKey(joinGameID)) {
+                System.out.println("Error: Invalid game ID. Use 'list' to see available games.");
+                return;
+            }
+
+            joinGameID = reverseMap.get(joinGameID);
+            ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor);
+
+            gameData = server.joinGame(joinGameID, team, authToken);
+
+            if (team == ChessGame.TeamColor.BLACK) {
+                currentState = UserState.BLACK;
+            } else {
+                currentState = UserState.WHITE;
+            }
+
+            drawBoard.printBothBoards();
+            updateGameList();
+
+            System.out.println("Successfully joined game as " + team + ".");
+
         }
-        else {
-            currentState = UserState.WHITE;
+        catch (IllegalArgumentException e) {
+            System.out.println("Error: Invalid team color. Choose 'WHITE' or 'BLACK'.");
+        } catch (Exception e) {
+            System.out.println("Failed to join game: " + e.getMessage());
         }
-        gameData = server.joinGame(joinGameID, team, authToken);
-        //draw boards
-        drawBoard.printBothBoards();
-        updateGameList();
 
     }
 
@@ -228,11 +264,9 @@ public class Repl {
                     currentState = UserState.OBSERVER;
                     drawBoard.printBothBoards();
                     System.out.println("Now observing game: " + gameData.getGameName());
-                    return;
                 }
             }
 
-            System.out.println("Error: Game not found.");
         } catch (NumberFormatException e) {
             System.out.println("Error: Invalid game ID format. It should be a number.");
         } catch (Exception e) {
