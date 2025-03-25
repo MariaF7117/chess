@@ -128,7 +128,6 @@ public class Repl {
 
     }
 
-
     private void logout()throws Exception{
         server.logout(authToken);
         currentState = UserState.LOGGED_OUT;
@@ -243,6 +242,7 @@ public class Repl {
             }
 
             int userInputID = Integer.parseInt(params[1]);
+
             updateGameList();
 
             Integer gameID = reverseMap.get(userInputID);
@@ -273,18 +273,6 @@ public class Repl {
         for (int i = 0; i < gameList.length; i++) {
             gameIdMap.put(gameList[i].getGameID(), (i + 1));
             reverseMap.put((i + 1), gameList[i].getGameID());
-        }
-    }
-    private void handleError(Exception e) {
-        String message = e.getMessage();
-        if (message.contains("already taken")) {
-           System.out.println("ERROR! The selected option is already taken!");
-        }
-        else if (message.contains("unauthorized")) {
-            System.out.println("ERROR! You do not have permission to perform this action!");
-        }
-        else {
-            System.out.println("ERROR! Something went wrong! " + e.getMessage());
         }
     }
 
