@@ -14,7 +14,7 @@ public class ServerFacadeTests {
 
     @BeforeEach
     void setup() throws Exception {
-        server = new ServerFacade("http://localhost:8080");
+        server = new ServerFacade("http://localhost:0");
         server.clear();
     }
 
