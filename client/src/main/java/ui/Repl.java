@@ -19,7 +19,6 @@ public class Repl {
     private String password;
     private String authToken;
     private GameData gameData;
-    public String serverUrl;
     private UserState currentState = UserState.LOGGED_OUT;
     ServerFacade server = new ServerFacade();
     private GameData[] gameList;
@@ -31,7 +30,7 @@ public class Repl {
 
 
     public Repl(String serverUrl){
-        serverUrl = "http://localhost:8080";
+
     }
 
     public void handleInput(String input)throws Exception{
@@ -114,6 +113,10 @@ public class Repl {
 
     private void register(String[] params) throws Exception{
         try {
+            if (params.length < 4) {
+                throw new IllegalArgumentException("Registration requires a username, password, and email.");
+            }
+
             username = params[1];
             password = params[2];
             String email = params[3];
@@ -121,18 +124,14 @@ public class Repl {
             server.register(username, password, email);
             loginUser(username, password);
             System.out.println("Registration successful! You are now logged in.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Registration failed: Invalid input. Please check your details and try again.");
-        } catch (Exception e) {
-            if (e.getMessage().contains("User already exists")) {
-                System.out.println("Registration failed: Username already taken. Try a different one.");
-            } else if (e.getMessage().contains("already logged in")) {
-                System.out.println("Registration failed: You are already logged in. Logout before registering a new account.");
-            } else {
-                System.out.println("Registration failed: " + e.getMessage());
-            }
+        }catch (IllegalArgumentException e){
+            System.out.println("Registration failed: " + e.getMessage());
+        }catch (Exception e){
+            handleError(e);
         }
+
     }
+
 
     private void logout()throws Exception{
         server.logout(authToken);
@@ -196,7 +195,6 @@ public class Repl {
             System.out.println("Game '" + gameName + "' created with ID: " + gameId);
         } catch (Exception e) {
             System.out.println("Failed to create game: " + (e.getMessage() != null ? e.getMessage() : "Unknown error"));
-            e.printStackTrace();
         }
     }
 
@@ -271,7 +269,6 @@ public class Repl {
             System.out.println("Error: Invalid game ID format. It should be a number.");
         } catch (Exception e) {
             System.out.println("Failed to observe game: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -283,6 +280,17 @@ public class Repl {
             reverseMap.put((i + 1), gameList[i].getGameID());
         }
     }
-
+    private void handleError(Exception e) {
+        String message = e.getMessage();
+        if (message.contains("already taken")) {
+           System.out.println("ERROR! The selected option is already taken!");
+        }
+        else if (message.contains("unauthorized")) {
+            System.out.println("ERROR! You do not have permission to perform this action!");
+        }
+        else {
+            System.out.println("ERROR! Something went wrong! " + e.getMessage());
+        }
+    }
 
 }
