@@ -89,19 +89,14 @@ public class Repl {
             }
             username = params[1];
             password = params[2];
+
             loginUser(username, password);
             System.out.println("Successfully Logged In, type 'help' for options");
         } catch (IllegalArgumentException e) {
             System.out.println("Login failed: " + e.getMessage());
         } catch (Exception e) {
-            if (e.getMessage().contains("User does not exist")) {
-                System.out.println("Login failed: Username not found. Please register first.");
-            } else if (e.getMessage().contains("Invalid password")) {
-                System.out.println("Login failed: Incorrect password. Please try again.");
-            } else {
-                System.out.println("Login failed: " + e.getMessage());
+                System.out.println("Login failed: That username && password combination does not exist");
             }
-        }
     }
     private void loginUser(String username, String password) throws Exception {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
@@ -128,7 +123,7 @@ public class Repl {
         }catch (IllegalArgumentException e){
             System.out.println("Registration failed: " + e.getMessage());
         }catch (Exception e){
-            handleError(e);
+            System.out.println("Registration failed: user exists: login or register different user");
         }
 
     }
