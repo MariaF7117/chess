@@ -20,7 +20,8 @@ public class Repl {
     private String authToken;
     private GameData gameData;
     private UserState currentState = UserState.LOGGED_OUT;
-    ServerFacade server = new ServerFacade();
+    String serverUrl = "http://localhost:8080";
+    ServerFacade server = new ServerFacade(serverUrl);
     private GameData[] gameList;
     Map<Integer, Integer> gameIdMap = new HashMap<>();
     Map<Integer, Integer> reverseMap = new HashMap<>();

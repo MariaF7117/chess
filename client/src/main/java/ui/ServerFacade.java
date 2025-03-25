@@ -20,7 +20,7 @@ public class ServerFacade {
     private final Gson gson;
     private final String serverUrl;
 
-    public ServerFacade() {
+    public ServerFacade(String serverUrl) {
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
         this.serverUrl = "http://localhost:8080";
