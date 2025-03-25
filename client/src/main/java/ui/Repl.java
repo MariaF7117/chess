@@ -199,7 +199,6 @@ public class Repl {
         }
     }
 
-
     private void join(String[] params) throws Exception{
         try {
             if (params.length < 3) {

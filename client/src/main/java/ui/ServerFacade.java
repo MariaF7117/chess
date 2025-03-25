@@ -8,6 +8,8 @@ import com.google.gson.JsonParser;
 import model.AuthData;
 import model.GameData;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,7 +25,7 @@ public class ServerFacade {
     public ServerFacade(String serverUrl) {
         this.httpClient = HttpClient.newHttpClient();
         this.gson = new Gson();
-        this.serverUrl = "http://localhost:8080";
+        this.serverUrl = serverUrl;
     }
 
     public AuthData register(String username, String password, String email) throws Exception {
@@ -86,11 +88,14 @@ public class ServerFacade {
         return responseType == Void.class ? null : gson.fromJson(response.body(), responseType);
     }
 
+
+
     private void validateResponse(HttpResponse<String> response) {
         if (response.statusCode() != 200) {
             throw new RuntimeException("HTTP request failed with status: " + response.statusCode() + " and body: " + response.body());
         }
     }
+
     public void clear() throws Exception {
         sendRequest("DELETE", "/db", null, null, Object.class);
     }
