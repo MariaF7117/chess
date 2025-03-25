@@ -92,7 +92,7 @@ public class ServerFacade {
         }
     }
     public void clear() throws Exception {
-        sendRequest("DELETE", "/db", null, null, null);
+        sendRequest("DELETE", "/db", null, null, Object.class);
     }
 
         private void handleException(Exception e, String message) {
