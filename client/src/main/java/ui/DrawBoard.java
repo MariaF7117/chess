@@ -60,7 +60,8 @@ public class DrawBoard {
             int col = pos.getColumn();
 
             String bgColor = (row + col) % 2 == 0 ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
-            String textColor = piece.getTeamColor() == ChessGame.TeamColor.BLACK ? EscapeSequences.SET_TEXT_COLOR_BLUE : EscapeSequences.SET_TEXT_COLOR_RED;
+            String textColor = piece.getTeamColor() == ChessGame.TeamColor.BLACK ? EscapeSequences.SET_TEXT_COLOR_BLUE :
+                    EscapeSequences.SET_TEXT_COLOR_RED;
             chessBoard[row][col] = bgColor + textColor + getPieceSymbol(piece);
         }
     }

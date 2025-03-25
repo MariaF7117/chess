@@ -19,21 +19,21 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void testRegister_Success() throws Exception {
+    void testRegisterSuccess() throws Exception {
         AuthData auth = server.register("testUser", "password", "test@example.com");
         assertNotNull(auth);
         assertNotNull(auth.authToken());
     }
 
     @Test
-    void testRegister_Failure() {
+    void testRegisterFailure() {
         assertThrows(Exception.class, () -> {
             server.register("", "password", "test@example.com");
         });
     }
 
     @Test
-    void testLogin_Success() throws Exception {
+    void testLoginSuccess() throws Exception {
         server.register("testUser", "password", "test@example.com");
         AuthData auth = server.login("testUser", "password");
         assertNotNull(auth);
@@ -41,25 +41,25 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void testLogin_Failure() {
+    void testLoginFailure() {
         assertThrows(Exception.class, () -> {
             server.login("wrongUser", "password");
         });
     }
 
     @Test
-    void testLogout_Success() throws Exception {
+    void testLogoutSuccess() throws Exception {
         AuthData auth = server.register("testUser", "password", "test@example.com");
         assertDoesNotThrow(() -> server.logout(auth.authToken()));
     }
 
     @Test
-    void testLogout_Failure() {
+    void testLogoutFailure() {
         assertDoesNotThrow(() -> server.logout("invalidToken"));
     }
 
     @Test
-    void testCreateGame_Success() throws Exception {
+    void testCreateGameSuccess() throws Exception {
         AuthData auth = server.register("testUser", "password", "test@example.com");
         GameData game = server.createGame("Test Game", auth.authToken());
         assertNotNull(game);
@@ -67,14 +67,14 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void testCreateGame_Failure() {
+    void testCreateGameFailure() {
         assertThrows(Exception.class, () -> {
             server.createGame("Test Game", "invalidToken");
         });
     }
 
     @Test
-    void testJoinGame_Success() throws Exception {
+    void testJoinGameSuccess() throws Exception {
         AuthData auth = server.register("testUser", "password", "test@example.com");
         GameData game = server.createGame("Test Game", auth.authToken());
         GameData joinedGame = server.joinGame(game.getGameID(), ChessGame.TeamColor.WHITE, auth.authToken());
@@ -82,14 +82,14 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void testJoinGame_Failure() {
+    void testJoinGameFailure() {
         assertThrows(Exception.class, () -> {
             server.joinGame(9999, ChessGame.TeamColor.BLACK, "invalidToken");
         });
     }
 
     @Test
-    void testListGames_Success() throws Exception {
+    void testListGamesSuccess() throws Exception {
         AuthData auth = server.register("testUser", "password", "test@example.com");
         server.createGame("Game 1", auth.authToken());
         server.createGame("Game 2", auth.authToken());
@@ -98,7 +98,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void testListGames_Failure() {
+    void testListGamesFailure() {
         assertThrows(Exception.class, () -> {
             server.listGames("invalidToken");
         });

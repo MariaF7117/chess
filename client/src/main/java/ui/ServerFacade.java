@@ -72,7 +72,8 @@ public class ServerFacade {
     private <T> T sendRequest(String method, String endpoint, Object body, String authToken, Class<T> responseType) throws Exception {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(new URI(serverUrl + endpoint))
-                .method(method, body == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(gson.toJson(body), StandardCharsets.UTF_8))
+                .method(method, body == null ? HttpRequest.BodyPublishers.noBody() :
+                        HttpRequest.BodyPublishers.ofString(gson.toJson(body), StandardCharsets.UTF_8))
                 .header("Content-Type", "application/json");
 
         if (authToken != null) {
