@@ -32,8 +32,31 @@ public class DrawBoard {
     }
 
     private void initializeBoard() {
-        String[] colLabels = {"   ", " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H ", " "};
-        String[] rowLabels = {" ", " 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 ", " "};
+        String[] colLabels = {
+                EscapeSequences.SET_TEXT_BOLD + "   " + EscapeSequences.RESET_TEXT_BOLD_FAINT,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " A " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " B " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " C " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " D " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " E " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " F " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " G " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_BLUE + " H " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_BOLD + "   " + EscapeSequences.RESET_TEXT_BOLD_FAINT
+        };
+
+        String[] rowLabels = {
+                EscapeSequences.SET_TEXT_BOLD + " " + EscapeSequences.RESET_TEXT_BOLD_FAINT,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 8 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 7 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 6 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 5 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 4 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 3 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 2 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_COLOR_RED + " 1 " + EscapeSequences.RESET_TEXT_COLOR,
+                EscapeSequences.SET_TEXT_BOLD + " " + EscapeSequences.RESET_TEXT_BOLD_FAINT
+        };
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
@@ -64,6 +87,7 @@ public class DrawBoard {
                     EscapeSequences.SET_TEXT_COLOR_RED;
             chessBoard[row][col] = bgColor + textColor + getPieceSymbol(piece);
         }
+
     }
 
     private String getPieceSymbol(ChessPiece piece) {
