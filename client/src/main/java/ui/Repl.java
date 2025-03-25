@@ -209,7 +209,8 @@ public class Repl {
             GameData gameData = server.joinGame(joinGameID, team, authToken);
 
 
-            if(team == ChessGame.TeamColor.WHITE && gameData.getWhiteUsername() == null || team == ChessGame.TeamColor.BLACK && gameData.getBlackUsername() == null){
+            if(team == ChessGame.TeamColor.WHITE && gameData.getWhiteUsername() == null ||
+                    team == ChessGame.TeamColor.BLACK && gameData.getBlackUsername() == null){
             if (team == ChessGame.TeamColor.BLACK) {
                 currentState = UserState.BLACK;
             }
