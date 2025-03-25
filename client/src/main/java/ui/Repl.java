@@ -149,27 +149,25 @@ public class Repl {
             System.out.println("There are no games in list create game");
         }
         else{
-            for (GameData gameData : gameList) {
+            for (int i = 0; i < gameList.length; i++) {
+                GameData gameData = gameList[i];
+                int gameId = i + 1;
 
-                int gameId = gameIdMap.get(gameData.getGameID());
-
-                System.out.println("Game Name: " + gameData.getGameName());
-                System.out.println("Game ID: " + gameId);
-                if(gameData.getWhiteUsername() == null){
-                    System.out.println("White Username Available");
+                System.out.println("Game " + gameId + ": " + gameData.getGameName());
+                if (gameData.getWhiteUsername() == null) {
+                    System.out.println("  White Player: Available");
+                } else {
+                    System.out.println("  White Player: " + gameData.getWhiteUsername());
                 }
-                else if(gameData.getWhiteUsername() != null){
-                    System.out.println("White Player: " + gameData.getWhiteUsername());
+                if (gameData.getBlackUsername() == null) {
+                    System.out.println("  Black Player: Available");
+                } else {
+                    System.out.println("  Black Player: " + gameData.getBlackUsername());
                 }
-                if(gameData.getBlackUsername() == null){
-                    System.out.println("Black Username Available" + "\n");
-                }
-                else if(gameData.getBlackUsername() != null){
-                    System.out.println("Black Player: " + gameData.getBlackUsername()  + "\n");
-                }
-
+                System.out.println();
             }
         }
+
     }
     private void createGame(String[] params) {
         try {
@@ -212,13 +210,16 @@ public class Repl {
             joinGameID = reverseMap.get(joinGameID);
             ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(teamColor);
 
-            gameData = server.joinGame(joinGameID, team, authToken);
+            GameData gameData = server.joinGame(joinGameID, team, authToken);
 
+
+            if(team == ChessGame.TeamColor.WHITE && gameData.getWhiteUsername() == null || team == ChessGame.TeamColor.BLACK && gameData.getBlackUsername() == null){
             if (team == ChessGame.TeamColor.BLACK) {
                 currentState = UserState.BLACK;
-            } else {
-                currentState = UserState.WHITE;
             }
+            else {
+                currentState = UserState.WHITE;
+            }}
 
             drawBoard.printBothBoards();
             updateGameList();
@@ -229,7 +230,7 @@ public class Repl {
         catch (IllegalArgumentException e) {
             System.out.println("Error: Invalid team color. Choose 'WHITE' or 'BLACK'.");
         } catch (Exception e) {
-            System.out.println("Failed to join game: " + e.getMessage());
+            System.out.println("Failed to join game: this player is already taken or unavailable right now");
         }
 
     }
@@ -240,11 +241,8 @@ public class Repl {
                 System.out.println("Error: You must provide a game ID. See 'help' for usage.");
                 return;
             }
-
             int userInputID = Integer.parseInt(params[1]);
-
             updateGameList();
-
             Integer gameID = reverseMap.get(userInputID);
             if (gameID == null) {
                 System.out.println("Error: Invalid game ID. Use 'list' to see available games.");
@@ -270,6 +268,8 @@ public class Repl {
 
     private void updateGameList() throws Exception {
         gameList = server.listGames(authToken);
+        gameIdMap.clear();
+        reverseMap.clear();
         for (int i = 0; i < gameList.length; i++) {
             gameIdMap.put(gameList[i].getGameID(), (i + 1));
             reverseMap.put((i + 1), gameList[i].getGameID());
