@@ -119,4 +119,11 @@ public class ServerFacadeTests {
         GameData[] games = serverFacade.listGames(auth.authToken());
         assertTrue(games.length >= 3);
     }
+
+    @Test
+    void clear() throws Exception{
+        serverFacade.clear();
+        assertTrue(true);
+    }
+
 }
